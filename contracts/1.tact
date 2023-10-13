@@ -1,7 +1,7 @@
 import "@stdlib/deploy";
 
 /*
-  TASK 1 - Counter contract 
+  TASK 1 - Counter contract
   Implement counter contract that will have 2 opcodes ('Add' / 'Subtract'),
   which add or subtract the sent number (int32) with the number that stored in the state.
   Also, its needed to implement one getter with name "counter" to get the number from the store.
@@ -25,12 +25,15 @@ contract Task1 with Deployable {
     }
 
     receive(msg: Add) {
+      self.counter = self.counter + msg.number;
     }
-    
+
     receive(msg: Subtract) {
+        self.counter =  self.counter - msg.number;
     }
 
     get fun counter(): Int {
+        return self.counter;
     }
 }
 

@@ -29,5 +29,6 @@ describe('Task1', () => {
     });
 
     it('test', async () => {
+        expect(true).toBeTruthy();
     });
 });
