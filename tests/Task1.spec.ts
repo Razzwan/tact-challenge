@@ -51,8 +51,9 @@ describe('Task1', () => {
 	});
 
 	it('Subtract', async () => {
+		await act('Add', 10n);
 		await act('Subtract', 1n);
 
-		expect(await task1.getCounter()).toBe(-1n);
+		expect(await task1.getCounter()).toBe(9n);
 	});
 });
