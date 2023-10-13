@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Filter and Archive code
         run: |
           mkdir -p contracts_filtered
@@ -46,6 +46,8 @@ jobs:
           minChallengePassed=$(cat response.json | jq -r '.minChallangePassed')
           report=$(cat response.json | jq -r '.md')
 
+          fullReport=$(cat response.json)
+          echo "$fullReport"
           echo "$report" > $GITHUB_STEP_SUMMARY
           if [ "$minChallengePassed" == "true" ]; then
             echo "success=true" >> $GITHUB_ENV  # Set success to true using Environment Files
