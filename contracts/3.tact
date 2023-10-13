@@ -1,20 +1,20 @@
 import "@stdlib/deploy";
 
 /*
-  TASK 3 - Dex contract 
+  TASK 3 - Dex contract
   Create a simple jetton dex contract that trades one pair of token A and B.
   The price of tokens depends on amount of tokens that sc have.
   So, if smartcontract have 10 of token A and 2 of token B, then after sending 1 tokens B you will receive 5 of tokens A.
-  
-  If user will pool dont have enougth tokens to trade
+
+  If user will pool dont have enough tokens to trade
   (for example someone will send 99999 tokens of B and dex pool have only 10 of tokens A),
-  then return sended (tokens B in our example) tokens back to user
+  then return sent (tokens B in our example) tokens back to user
 
   Implement a getter that will give the number of tokens in the pool and
   one more to get price of token A or token B.
-  
+
   Note
-  Admin can add token A and token B just by sending then to smartcontract (we need to set initial supply for the pool). 
+  Admin can add token A and token B just by sending then to smartcontract (we need to set initial supply for the pool).
 */
 
 message(0x7362d09c) TokenNotification {
@@ -52,11 +52,11 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-  } 
-  
-  get fun price(token: Address): Int { 
   }
-  
-  get fun balance(token: Address): Int { 
+
+  get fun price(token: Address): Int {
+  }
+
+  get fun balance(token: Address): Int {
   }
 }
