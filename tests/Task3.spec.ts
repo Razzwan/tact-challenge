@@ -1,8 +1,7 @@
-import {Blockchain, SandboxContract} from '@ton-community/sandbox';
+import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/sandbox';
 import {Address, beginCell, toNano} from 'ton-core';
 import {Task3} from '../wrappers/Task3';
 import '@ton-community/test-utils';
-import {Add} from '../build/Task1/tact_Task1';
 
 describe('Task3', () => {
 	let blockchain: Blockchain;
@@ -10,13 +9,17 @@ describe('Task3', () => {
 	let tokenA: Address;
 	let tokenB: Address;
 	let admin: Address;
+	let from: Address;
 
 	beforeEach(async () => {
 		blockchain = await Blockchain.create();
 
-		tokenA = Address.parse('EQCnEWNHi38OLtH1lMTvVW7KJSMneSKdGF9GsEODBt21tmyU');
-		tokenB = Address.parse('EQAgJdyanQfEsQRW0L1Zded0PgwTEMv9vBujaGJ-PTKbKwQj');
-		admin = Address.parse('EQD1X7wifAbsq5C_hry1R_OdW2mx0RqXy1uuRonqNMQsd-9j');
+		const addresses = await blockchain.createWallets(4);
+
+		tokenA = addresses[0].getSender().address;
+		tokenB = addresses[1].getSender().address;
+		admin = addresses[2].getSender().address;
+		from = addresses[3].getSender().address;
 
 		task3 = blockchain.openContract(await Task3.fromInit(admin, tokenA, tokenB));
 		const deployer = await blockchain.treasury('deployer');
@@ -38,24 +41,19 @@ describe('Task3', () => {
 		});
 	});
 
-	const tokenTransfer = async (amount: bigint, dest: Address) => {
-		const deployer = await blockchain.treasury('deployer');
-		await task3.send(
-			deployer.getSender(),
+	const tokenTransfer = async (token: 'A' | "B", amount: bigint, from: Address): Promise<SendMessageResult> => {
+		const sender = token === 'A' ? blockchain.sender(tokenA) : blockchain.sender(tokenB);
+		return await task3.send(
+			sender,
 			{
-				value: toNano('0.05'),
+				value: toNano('1'),
 			},
 			{
-				$$type: 'TokenTransfer',
+				$$type: 'TokenNotification',
 				queryId: 0n,
-
 				amount: amount * 1000000000n,
-				destination: dest,
-				responseDestination: null,
-				customPayload: null,
-				forwardTonAmount: toNano('0.05'),
+				from,
 				forwardPayload: beginCell().endCell(),
-
 			}
 		);
 	};
@@ -64,10 +62,57 @@ describe('Task3', () => {
 		expect(await task3.getBalance(tokenA)).toBe(0n);
 	});
 
-	it('зачисление на счет', async () => {
-		await tokenTransfer(10n, tokenA);
+	it('зачисление на счет A', async () => {
+		await tokenTransfer('A', 10n, admin);
 
 		expect(await task3.getBalance(tokenA)).toBe(10n * 1000000000n);
+	});
+
+	it('зачисление на счет B', async () => {
+		await tokenTransfer('B', 2n, admin);
+
+		expect(await task3.getBalance(tokenB)).toBe(2n * 1000000000n);
+	});
+
+	it('зачисление на счет B от внешнего контракта', async () => {
+		await tokenTransfer('A', 10n, admin);
+		await tokenTransfer('B', 2n, admin);
+
+		await tokenTransfer('B', 1n, from);
+
+		expect(await task3.getBalance(tokenB)).toBe(3n * 1000000000n);
+		expect(await task3.getBalance(tokenA)).toBe(5n * 1000000000n);
+	});
+
+	it('зачисление на счет A от внешнего контракта', async () => {
+		await tokenTransfer('A', 10n, admin);
+		await tokenTransfer('B', 2n, admin);
+
+		const t = await tokenTransfer('A', 10n, from);
+
+		expect(await task3.getBalance(tokenA)).toBe(20n * 1000000000n);
+		expect(await task3.getBalance(tokenB)).toBe(0n * 1000000000n);
+
+		expect(t.transactions).toHaveTransaction({
+			from: expect.any,
+			to: tokenB,
+			deploy: false,
+			success: true,
+		});
+	});
+
+	it('зачисление при нехватке средств', async () => {
+		const t = await tokenTransfer('A', 10n, from);
+
+		expect(await task3.getBalance(tokenA)).toBe(0n);
+		expect(await task3.getBalance(tokenB)).toBe(0n);
+
+		expect(t.transactions).toHaveTransaction({
+			from: expect.any,
+			to: tokenA,
+			deploy: false,
+			success: true,
+		});
 	});
 });
 
