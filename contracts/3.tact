@@ -71,14 +71,14 @@ contract Task3 with Deployable {
         if (self.a == 0) {
             return 0;
         }
-        return self.b / self.a;
+        return self.b * self.decimal / self.a;
     }
 
     if (tAddress == self.jAddressB) {
-        if (self.b == 0) {
+        if (self.b == 0) {s
             return 0;
         }
-        return self.a / self.b;
+        return self.a * self.decimal / self.b;
     }
 
     return 0;
@@ -130,7 +130,7 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
-          let price: Int = self.getPrice(jAddress);
+          let price: Int = self.getPrice(self.jAddressB);
 
           let bAmount: Int = price * msg.amount / self.decimal;
 
@@ -148,7 +148,7 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.b = self.b + msg.amount;
         } else {
-          let price: Int = self.getPrice(jAddress);
+          let price: Int = self.getPrice(self.jAddressA);
 
           let aAmount: Int = price * msg.amount / self.decimal;
 
