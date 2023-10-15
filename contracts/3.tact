@@ -120,12 +120,12 @@ contract Task3 with Deployable {
 
     require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
 
-    let price: Int = self.getPrice(jAddress);
-
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
+          let price: Int = self.getPrice(jAddress);
+
           let bAmount: Int = price * msg.amount / self.decimal;
 
           if (bAmount > self.b) {
@@ -142,6 +142,7 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.b = self.b + msg.amount;
         } else {
+          let price: Int = self.getPrice(jAddress);
 
           let aAmount: Int = price * msg.amount / self.decimal;
 
