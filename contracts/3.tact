@@ -110,37 +110,35 @@ contract Task3 with Deployable {
 
     // require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
 
-    let coins: Int = 0;
-
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
-          // self.a = self.a + msg.amount;
+          self.a = self.a + msg.amount;
         } else {
-          coins = (self.b / self.a) * msg.amount;
+          let bAmount: Int = (self.b * self.decimal / self.a) * msg.amount / self.decimal;
 
           if (coins > self.b) {
             self.sendAJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.a = self.a + msg.amount;
-            self.b = self.b - coins;
-            self.sendBJettons(coins, msg.from, msg.queryId);
+            self.b = self.b - bAmount;
+            self.sendBJettons(bAmount, msg.from, msg.queryId);
           }
         }
     }
 
     if (jAddress == self.jAddressB) {
         if (msg.from == self.owner) {
-          // self.b = self.b + msg.amount;
+          self.b = self.b + msg.amount;
         } else {
 
-          coins = (self.a / self.b) * msg.amount;
+          let aAmount: Int = (self.a * self.decimal / self.b) * msg.amount / self.decimal;
 
           if (coins > self.a) {
             self.sendBJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.b = self.b + msg.amount;
-            self.a = self.a - coins;
-            self.sendAJettons(coins, msg.from, msg.queryId);
+            self.a = self.a - aAmount;
+            self.sendAJettons(aAmount, msg.from, msg.queryId);
           }
         }
     }
