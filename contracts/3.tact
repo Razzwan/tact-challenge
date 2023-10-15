@@ -101,6 +101,7 @@ contract Task3 with Deployable {
         if (ctx.sender == self.owner) {
           self.a = self.a + msg.amount;
         } else {
+
           coins = (self.b / self.a) * msg.amount;
 
           if (coins > self.b) {
@@ -132,11 +133,11 @@ contract Task3 with Deployable {
 
   get fun price(token: Address): Int {
     if (token == self.jAddressA) {
-        return self.a * self.decimal / self.b;
+        return self.b * self.decimal / self.a;
     }
 
     if (token == self.jAddressB) {
-        return self.b * self.decimal / self.a;
+        return self.a * self.decimal / self.b;
     }
 
     return 0;
