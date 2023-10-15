@@ -116,7 +116,7 @@ contract Task3 with Deployable {
         } else {
           let bAmount: Int = (self.b * self.decimal / self.a) * msg.amount / self.decimal;
 
-          if (coins > self.b) {
+          if (bAmount > self.b) {
             self.sendAJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.a = self.a + msg.amount;
@@ -133,7 +133,7 @@ contract Task3 with Deployable {
 
           let aAmount: Int = (self.a * self.decimal / self.b) * msg.amount / self.decimal;
 
-          if (coins > self.a) {
+          if (aAmount > self.a) {
             self.sendBJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.b = self.b + msg.amount;
