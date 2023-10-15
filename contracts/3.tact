@@ -71,14 +71,14 @@ contract Task3 with Deployable {
         if (self.a == 0) {
             return 0;
         }
-        return self.b * self.decimal / self.a;
+        return self.b / self.a;
     }
 
     if (tAddress == self.jAddressB) {
         if (self.b == 0) {
             return 0;
         }
-        return self.a * self.decimal / self.b;
+        return self.a / self.b;
     }
 
     return 0;
