@@ -133,21 +133,23 @@ contract Task3 with Deployable {
         }
     }
 
-    send(SendParameters{
-      to: to,
-      value: 0,
-      mode: SendRemainingValue,
-      bounce: false,
-      body: TokenTransfer{
-        queryId: msg.queryId,
-        amount: amount,
-        destination: msg.from,
-        responseDestination: null,
-        customPayload: null,
-        forwardTonAmount: 1,
-        forwardPayload: msg.forwardPayload
-      }.toCell()
-    });
+    if (amount > 0) {
+        send(SendParameters{
+          to: to,
+          value: 0,
+          mode: SendRemainingValue,
+          bounce: true,
+          body: TokenTransfer{
+            queryId: msg.queryId,
+            amount: amount,
+            destination: msg.from,
+            responseDestination: msg.from,
+            customPayload: null,
+            forwardTonAmount: 1,
+            forwardPayload: msg.forwardPayload
+          }.toCell()
+        });
+    }
   }
 
   get fun price(token: Address): Int {

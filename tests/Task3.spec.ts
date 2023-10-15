@@ -112,7 +112,16 @@ describe('Task3', () => {
 			to: tokenA,
 			deploy: false,
 			success: true,
+			value: 984359000n,
 		});
+	});
+
+	it('получение цены', async () => {
+		await tokenTransfer('A', 10n, admin);
+		await tokenTransfer('B', 2n, admin);
+
+		expect(await task3.getPrice(tokenA)).toBe(200000000n);
+		expect(await task3.getPrice(tokenB)).toBe(5000000000n);
 	});
 });
 
