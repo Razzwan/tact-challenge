@@ -76,7 +76,7 @@ contract Task3 with Deployable {
         queryId: queryId,
         amount: amount,
         destination: to,
-        responseDestination: to,
+        responseDestination: null,
         customPayload: null,
         forwardTonAmount: 0,
         forwardPayload: emptyCell().asSlice()
@@ -94,7 +94,7 @@ contract Task3 with Deployable {
         queryId: queryId,
         amount: amount,
         destination: to,
-        responseDestination: to,
+        responseDestination: null,
         customPayload: null,
         forwardTonAmount: 0,
         forwardPayload: emptyCell().asSlice()
@@ -106,7 +106,7 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let jAddress: Address = ctx.sender;
 
-    require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
+    require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
 
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
@@ -144,11 +144,11 @@ contract Task3 with Deployable {
 
   get fun price(token: Address): Int {
     if (token == self.jAddressA) {
-        return self.a * self.decimal / self.b;
+        return self.b / self.a;
     }
 
     if (token == self.jAddressB) {
-        return self.b * self.decimal / self.a;
+        return self.a / self.b;
     }
 
     return 0;
