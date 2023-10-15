@@ -38,7 +38,7 @@ contract Task2 with Deployable {
     let ctx: Context = context();
     send(SendParameters{
       to: self.admin,
-      value: ctx.value,
+      value: 0,
       mode: SendRemainingValue,
       bounce: true,
       body: beginCell().storeSlice(ctx.raw).endCell()
