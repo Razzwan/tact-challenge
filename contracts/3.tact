@@ -68,10 +68,16 @@ contract Task3 with Deployable {
 
   fun getPrice(tAddress: Address): Int {
     if (tAddress == self.jAddressA) {
+        if (self.a == 0) {
+            return 0;
+        }
         return self.b * self.decimal / self.a;
     }
 
     if (tAddress == self.jAddressB) {
+        if (self.b == 0) {
+            return 0;
+        }
         return self.a * self.decimal / self.b;
     }
 
@@ -128,7 +134,7 @@ contract Task3 with Deployable {
 
           let bAmount: Int = price * msg.amount / self.decimal;
 
-          if (bAmount > self.b) {
+          if ((bAmount > self.b) || (bAmount == 0)) {
             self.sendAJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.a = self.a + msg.amount;
@@ -146,7 +152,7 @@ contract Task3 with Deployable {
 
           let aAmount: Int = price * msg.amount / self.decimal;
 
-          if (aAmount > self.a) {
+          if ((bAmount > self.a) || (bAmount == 0)) {
             self.sendBJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.b = self.b + msg.amount;
