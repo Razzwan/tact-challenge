@@ -74,7 +74,7 @@ contract Task3 with Deployable {
       bounce: true,
       body: TokenTransfer{
         queryId: queryId,
-        amount: amount * self.decimal,
+        amount: amount,
         destination: to,
         responseDestination: to,
         customPayload: null,
@@ -92,7 +92,7 @@ contract Task3 with Deployable {
       bounce: true,
       body: TokenTransfer{
         queryId: queryId,
-        amount: amount * self.decimal,
+        amount: amount,
         destination: to,
         responseDestination: to,
         customPayload: null,
