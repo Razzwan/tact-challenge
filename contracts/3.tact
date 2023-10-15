@@ -152,7 +152,7 @@ contract Task3 with Deployable {
 
           let aAmount: Int = price * msg.amount / self.decimal;
 
-          if ((bAmount > self.a) || (bAmount == 0)) {
+          if ((aAmount > self.a) || (aAmount == 0)) {
             self.sendBJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.b = self.b + msg.amount;
@@ -164,8 +164,7 @@ contract Task3 with Deployable {
   }
 
   get fun price(token: Address): Int {
-    let price: Int = self.getPrice(token);
-    return price;
+    return self.getPrice(token);
   }
 
   get fun balance(token: Address): Int {
