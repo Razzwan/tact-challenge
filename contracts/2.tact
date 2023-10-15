@@ -30,7 +30,7 @@ contract Task2 with Deployable {
         value: 0,
         mode: SendRemainingValue,
         bounce: true,
-        body: beginCell().storeSlice(ctx.raw).endCell()
+        body: beginCell().endCell()
       });
   }
 
