@@ -66,66 +66,81 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
-  fun sendACoins(amount: Int) {
+  fun sendAJettons(amount: Int, to: Address) {
     let ctx: Context = context();
     send(SendParameters{
-      to: ctx.sender,
+      to: self.jAddressA,
       value: 0,
       mode: SendRemainingValue,
       bounce: true,
-      body: beginCell().storeCoins(amount).storeAddress(self.jAddressA).endCell()
+      body: TokenTransfer{
+        queryId: 123,
+        amount: amount,
+        destination: to,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardTonAmount: ton("1"),
+        forwardPayload: beginCell().endCell().beginParse()
+      }.toCell()
     });
   }
 
-  fun sendBCoins(amount: Int) {
+  fun sendBJettons(amount: Int, to: Address) {
     let ctx: Context = context();
     send(SendParameters{
-      to: ctx.sender,
+      to: self.jAddressB,
       value: 0,
       mode: SendRemainingValue,
       bounce: true,
-      body: beginCell().storeCoins(amount).storeAddress(self.jAddressB).endCell()
+      body: TokenTransfer{
+        queryId: 123,
+        amount: amount,
+        destination: to,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardTonAmount: ton("1"),
+        forwardPayload: beginCell().endCell().beginParse()
+      }.toCell()
     });
   }
 
   receive(msg: TokenNotification) {
-  }
-
-  receive(msg: TokenTransfer) {
-
     let ctx: Context = context();
+    let jAddress: Address = ctx.sender;
+
+    require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
 
     let coins: Int = 0;
 
-    if (msg.destination == self.jAddressA) {
-        if (ctx.sender == self.owner) {
+    if (jAddress == self.jAddressA) {
+        if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
-
           coins = (self.b / self.a) * msg.amount;
 
           if (coins > self.b) {
-            self.sendACoins(msg.amount);
+            self.sendAJettons(msg.amount, msg.from);
           } else {
             self.a = self.a + msg.amount;
             self.b = self.b - coins;
-            self.sendBCoins(coins);
+            self.sendBJettons(coins, msg.from);
           }
         }
     }
 
-    if (msg.destination == self.jAddressB) {
-        if (ctx.sender == self.owner) {
+    if (jAddress == self.jAddressB) {
+        if (msg.from == self.owner) {
           self.b = self.b + msg.amount;
         } else {
+
           coins = (self.a / self.b) * msg.amount;
 
           if (coins > self.a) {
-            self.sendBCoins(msg.amount);
+            self.sendBJettons(msg.amount, msg.from);
           } else {
             self.b = self.b + msg.amount;
             self.a = self.a - coins;
-            self.sendACoins(coins);
+            self.sendAJettons(coins, msg.from);
           }
         }
     }
@@ -133,11 +148,11 @@ contract Task3 with Deployable {
 
   get fun price(token: Address): Int {
     if (token == self.jAddressA) {
-        return self.b * self.decimal / self.a;
+        return self.a * self.decimal / self.b;
     }
 
     if (token == self.jAddressB) {
-        return self.a * self.decimal / self.b;
+        return self.b * self.decimal / self.a;
     }
 
     return 0;
