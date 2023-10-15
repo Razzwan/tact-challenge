@@ -66,7 +66,7 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
-  fun sendAJettons(amount: Int, to: Address) {
+  fun sendAJettons(amount: Int, to: Address, queryId: Int) {
     let ctx: Context = context();
     send(SendParameters{
       to: self.jAddressA,
@@ -74,18 +74,18 @@ contract Task3 with Deployable {
       mode: SendRemainingValue,
       bounce: true,
       body: TokenTransfer{
-        queryId: 123,
+        queryId: queryId,
         amount: amount,
         destination: to,
         responseDestination: myAddress(),
         customPayload: null,
         forwardTonAmount: ton("1"),
-        forwardPayload: beginCell().endCell().beginParse()
+        forwardPayload: emptyCell().asSlice()
       }.toCell()
     });
   }
 
-  fun sendBJettons(amount: Int, to: Address) {
+  fun sendBJettons(amount: Int, to: Address, queryId: Int) {
     let ctx: Context = context();
     send(SendParameters{
       to: self.jAddressB,
@@ -93,13 +93,13 @@ contract Task3 with Deployable {
       mode: SendRemainingValue,
       bounce: true,
       body: TokenTransfer{
-        queryId: 123,
+        queryId: queryId,
         amount: amount,
         destination: to,
         responseDestination: myAddress(),
         customPayload: null,
         forwardTonAmount: ton("1"),
-        forwardPayload: beginCell().endCell().beginParse()
+        forwardPayload: emptyCell().asSlice()
       }.toCell()
     });
   }
@@ -119,11 +119,11 @@ contract Task3 with Deployable {
           coins = (self.b / self.a) * msg.amount;
 
           if (coins > self.b) {
-            self.sendAJettons(msg.amount, msg.from);
+            self.sendAJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.a = self.a + msg.amount;
             self.b = self.b - coins;
-            self.sendBJettons(coins, msg.from);
+            self.sendBJettons(coins, msg.from, msg.queryId);
           }
         }
     }
@@ -136,11 +136,11 @@ contract Task3 with Deployable {
           coins = (self.a / self.b) * msg.amount;
 
           if (coins > self.a) {
-            self.sendBJettons(msg.amount, msg.from);
+            self.sendBJettons(msg.amount, msg.from, msg.queryId);
           } else {
             self.b = self.b + msg.amount;
             self.a = self.a - coins;
-            self.sendAJettons(coins, msg.from);
+            self.sendAJettons(coins, msg.from, msg.queryId);
           }
         }
     }
