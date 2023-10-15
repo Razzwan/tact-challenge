@@ -108,7 +108,7 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let jAddress: Address = ctx.sender;
 
-    require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
+    // require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
 
     let coins: Int = 0;
 
