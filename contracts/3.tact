@@ -87,7 +87,7 @@ contract Task3 with Deployable {
   fun sendAJettons(amount: Int, to: Address, queryId: Int) {
     send(SendParameters{
       to: self.jAddressA,
-      value: 0,
+      value: ton("0.65"),
       mode: SendRemainingValue,
       bounce: true,
       body: TokenTransfer{
@@ -96,7 +96,7 @@ contract Task3 with Deployable {
         destination: to,
         responseDestination: null,
         customPayload: null,
-        forwardTonAmount: 0,
+        forwardTonAmount: ton("1"),
         forwardPayload: emptyCell().asSlice()
       }.toCell()
     });
@@ -105,7 +105,7 @@ contract Task3 with Deployable {
   fun sendBJettons(amount: Int, to: Address, queryId: Int) {
     send(SendParameters{
       to: self.jAddressB,
-      value: 0,
+      value: ton("0.65"),
       mode: SendRemainingValue,
       bounce: true,
       body: TokenTransfer{
@@ -114,7 +114,7 @@ contract Task3 with Deployable {
         destination: to,
         responseDestination: null,
         customPayload: null,
-        forwardTonAmount: 0,
+        forwardTonAmount: ton("1"),
         forwardPayload: emptyCell().asSlice()
       }.toCell()
     });
@@ -124,7 +124,7 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let jAddress: Address = ctx.sender;
 
-    // require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
+    require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
 
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
