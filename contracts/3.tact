@@ -84,38 +84,38 @@ contract Task3 with Deployable {
     return 0;
   }
 
-  fun sendAJettons(amount: Int, to: Address, queryId: Int, forwardPayload: Slice) {
+  fun sendAJettons(amount: Int, msg: TokenNotification) {
     send(SendParameters{
       to: self.jAddressA,
-      value: ton("0.65"),
+      value: 0,
       mode: SendRemainingValue,
-      bounce: true,
+      bounce: false,
       body: TokenTransfer{
-        queryId: queryId,
+        queryId: msg.queryId,
         amount: amount,
-        destination: to,
+        destination: msg.from,
         responseDestination: null,
         customPayload: null,
-        forwardTonAmount: ton("1"),
-        forwardPayload: forwardPayload
+        forwardTonAmount: 1,
+        forwardPayload: msg.forwardPayload
       }.toCell()
     });
   }
 
-  fun sendBJettons(amount: Int, to: Address, queryId: Int, forwardPayload: Slice) {
+  fun sendBJettons(amount: Int, msg: TokenNotification) {
     send(SendParameters{
       to: self.jAddressB,
-      value: ton("0.65"),
+      value: 0,
       mode: SendRemainingValue,
-      bounce: true,
+      bounce: false,
       body: TokenTransfer{
-        queryId: queryId,
+        queryId: msg.queryId,
         amount: amount,
-        destination: to,
+        destination: msg.from,
         responseDestination: null,
         customPayload: null,
-        forwardTonAmount: ton("1"),
-        forwardPayload: forwardPayload
+        forwardTonAmount: 1,
+        forwardPayload: msg.forwardPayload
       }.toCell()
     });
   }
@@ -135,11 +135,11 @@ contract Task3 with Deployable {
           let bAmount: Int = price * msg.amount / self.decimal;
 
           if ((bAmount > self.b) || (bAmount == 0)) {
-            self.sendAJettons(msg.amount, msg.from, msg.queryId, msg.forwardPayload);
+            self.sendAJettons(msg.amount, msg);
           } else {
             self.a = self.a + msg.amount;
             self.b = self.b - bAmount;
-            self.sendBJettons(bAmount, msg.from, msg.queryId, msg.forwardPayload);
+            self.sendBJettons(bAmount, msg);
           }
         }
     }
@@ -153,11 +153,11 @@ contract Task3 with Deployable {
           let aAmount: Int = price * msg.amount / self.decimal;
 
           if ((aAmount > self.a) || (aAmount == 0)) {
-            self.sendBJettons(msg.amount, msg.from, msg.queryId, msg.forwardPayload);
+            self.sendBJettons(msg.amount, msg);
           } else {
             self.b = self.b + msg.amount;
             self.a = self.a - aAmount;
-            self.sendAJettons(aAmount, msg.from, msg.queryId, msg.forwardPayload);
+            self.sendAJettons(aAmount, msg);
           }
         }
     }
