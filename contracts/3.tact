@@ -74,7 +74,7 @@ contract Task3 with Deployable {
       bounce: true,
       body: TokenTransfer{
         queryId: queryId,
-        amount: amount,
+        amount: amount * self.decimal,
         destination: to,
         responseDestination: to,
         customPayload: null,
@@ -92,7 +92,7 @@ contract Task3 with Deployable {
       bounce: true,
       body: TokenTransfer{
         queryId: queryId,
-        amount: amount,
+        amount: amount * self.decimal,
         destination: to,
         responseDestination: to,
         customPayload: null,
@@ -106,7 +106,7 @@ contract Task3 with Deployable {
     let ctx: Context = context();
     let jAddress: Address = ctx.sender;
 
-    // require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
+    require(jAddress == self.jAddressA || jAddress == self.jAddressB, "Unsupported jetton");
 
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
