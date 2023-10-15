@@ -66,6 +66,18 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
+  fun getPrice(tAddress: Address): Int {
+    if (tAddress == self.jAddressA) {
+        return self.b * self.decimal / self.a;
+    }
+
+    if (tAddress == self.jAddressB) {
+        return self.a * self.decimal / self.b;
+    }
+
+    return 0;
+  }
+
   fun sendAJettons(amount: Int, to: Address, queryId: Int) {
     send(SendParameters{
       to: self.jAddressA,
@@ -108,11 +120,13 @@ contract Task3 with Deployable {
 
     require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
 
+    let price: Int = self.getPrice(jAddress);
+
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
-          let bAmount: Int = (self.b * self.decimal / self.a) * msg.amount / self.decimal;
+          let bAmount: Int = price * msg.amount / self.decimal;
 
           if (bAmount > self.b) {
             self.sendAJettons(msg.amount, msg.from, msg.queryId);
@@ -129,7 +143,7 @@ contract Task3 with Deployable {
           self.b = self.b + msg.amount;
         } else {
 
-          let aAmount: Int = (self.a * self.decimal / self.b) * msg.amount / self.decimal;
+          let aAmount: Int = price * msg.amount / self.decimal;
 
           if (aAmount > self.a) {
             self.sendBJettons(msg.amount, msg.from, msg.queryId);
@@ -143,26 +157,19 @@ contract Task3 with Deployable {
   }
 
   get fun price(token: Address): Int {
-    if (token == self.jAddressA) {
-        return self.b * self.decimal / self.a;
-    }
-
-    if (token == self.jAddressB) {
-        return self.a * self.decimal / self.b;
-    }
-
-    return 0;
+    let price: Int = self.getPrice(token);
+    return price;
   }
 
   get fun balance(token: Address): Int {
-      if (token == self.jAddressA) {
-          return self.a;
-      }
+    if (token == self.jAddressA) {
+      return self.a;
+    }
 
-      if (token == self.jAddressB) {
-          return self.b;
-      }
+    if (token == self.jAddressB) {
+      return self.b;
+    }
 
-      return 0;
+    return 0;
   }
 }
