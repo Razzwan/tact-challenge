@@ -114,7 +114,7 @@ contract Task3 with Deployable {
 
     if (jAddress == self.jAddressA) {
         if (msg.from == self.owner) {
-          self.a = self.a + msg.amount;
+          // self.a = self.a + msg.amount;
         } else {
           coins = (self.b / self.a) * msg.amount;
 
@@ -130,7 +130,7 @@ contract Task3 with Deployable {
 
     if (jAddress == self.jAddressB) {
         if (msg.from == self.owner) {
-          self.b = self.b + msg.amount;
+          // self.b = self.b + msg.amount;
         } else {
 
           coins = (self.a / self.b) * msg.amount;
