@@ -84,7 +84,7 @@ contract Task3 with Deployable {
     return 0;
   }
 
-  fun sendAJettons(amount: Int, to: Address, queryId: Int) {
+  fun sendAJettons(amount: Int, to: Address, queryId: Int, forwardPayload: Slice) {
     send(SendParameters{
       to: self.jAddressA,
       value: ton("0.65"),
@@ -97,12 +97,12 @@ contract Task3 with Deployable {
         responseDestination: null,
         customPayload: null,
         forwardTonAmount: ton("1"),
-        forwardPayload: emptyCell().asSlice()
+        forwardPayload: forwardPayload
       }.toCell()
     });
   }
 
-  fun sendBJettons(amount: Int, to: Address, queryId: Int) {
+  fun sendBJettons(amount: Int, to: Address, queryId: Int, forwardPayload: Slice) {
     send(SendParameters{
       to: self.jAddressB,
       value: ton("0.65"),
@@ -115,7 +115,7 @@ contract Task3 with Deployable {
         responseDestination: null,
         customPayload: null,
         forwardTonAmount: ton("1"),
-        forwardPayload: emptyCell().asSlice()
+        forwardPayload: forwardPayload
       }.toCell()
     });
   }
@@ -135,11 +135,11 @@ contract Task3 with Deployable {
           let bAmount: Int = price * msg.amount / self.decimal;
 
           if ((bAmount > self.b) || (bAmount == 0)) {
-            self.sendAJettons(msg.amount, msg.from, msg.queryId);
+            self.sendAJettons(msg.amount, msg.from, msg.queryId, msg.forwardPayload);
           } else {
             self.a = self.a + msg.amount;
             self.b = self.b - bAmount;
-            self.sendBJettons(bAmount, msg.from, msg.queryId);
+            self.sendBJettons(bAmount, msg.from, msg.queryId, msg.forwardPayload);
           }
         }
     }
@@ -153,11 +153,11 @@ contract Task3 with Deployable {
           let aAmount: Int = price * msg.amount / self.decimal;
 
           if ((aAmount > self.a) || (aAmount == 0)) {
-            self.sendBJettons(msg.amount, msg.from, msg.queryId);
+            self.sendBJettons(msg.amount, msg.from, msg.queryId, msg.forwardPayload);
           } else {
             self.b = self.b + msg.amount;
             self.a = self.a - aAmount;
-            self.sendAJettons(aAmount, msg.from, msg.queryId);
+            self.sendAJettons(aAmount, msg.from, msg.queryId, msg.forwardPayload);
           }
         }
     }
