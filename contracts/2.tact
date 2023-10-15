@@ -28,9 +28,9 @@ contract Task2 with Deployable {
       send(SendParameters{
         to: msg.sender,
         value: 0,
-        mode: SendRemainingValue,
+        mode: SendIgnoreErrors, // может быть неверно
         bounce: true,
-        body: beginCell().endCell()
+        body: beginCell().endCell() // может быть неверно
       });
   }
 
@@ -39,10 +39,10 @@ contract Task2 with Deployable {
     send(SendParameters{
       to: self.admin,
       value: 0,
-      mode: SendRemainingValue,
+      mode: SendRemainingValue, // может быть неверно
       bounce: true,
       body: beginCell()
-        .storeAddress(ctx.sender)
+        .storeAddress(ctx.sender) // может быть неверно
         .storeRef(
             beginCell().storeSlice(msg).endCell()
         ).endCell()
