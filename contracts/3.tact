@@ -67,7 +67,6 @@ contract Task3 with Deployable {
   }
 
   fun sendAJettons(amount: Int, to: Address, queryId: Int) {
-    let ctx: Context = context();
     send(SendParameters{
       to: self.jAddressA,
       value: 0,
@@ -77,7 +76,7 @@ contract Task3 with Deployable {
         queryId: queryId,
         amount: amount,
         destination: to,
-        responseDestination: myAddress(),
+        responseDestination: to,
         customPayload: null,
         forwardTonAmount: ton("1"),
         forwardPayload: emptyCell().asSlice()
@@ -86,7 +85,6 @@ contract Task3 with Deployable {
   }
 
   fun sendBJettons(amount: Int, to: Address, queryId: Int) {
-    let ctx: Context = context();
     send(SendParameters{
       to: self.jAddressB,
       value: 0,
@@ -96,7 +94,7 @@ contract Task3 with Deployable {
         queryId: queryId,
         amount: amount,
         destination: to,
-        responseDestination: myAddress(),
+        responseDestination: to,
         customPayload: null,
         forwardTonAmount: ton("1"),
         forwardPayload: emptyCell().asSlice()
