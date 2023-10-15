@@ -27,7 +27,7 @@ contract Task2 with Deployable {
       let ctx: Context = context();
       send(SendParameters{
         to: msg.sender,
-        value: ctx.value,
+        value: 0,
         mode: SendRemainingValue,
         bounce: true,
         body: beginCell().storeSlice(ctx.raw).endCell()
@@ -44,7 +44,7 @@ contract Task2 with Deployable {
       body: beginCell()
         .storeAddress(ctx.sender)
         .storeRef(
-            beginCell().storeSlice(ctx.raw).endCell()
+            beginCell().storeSlice(msg).endCell()
         ).endCell()
     });
   }
