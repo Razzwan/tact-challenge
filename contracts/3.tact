@@ -101,7 +101,7 @@ contract Task3 with Deployable {
 
         let bAmount: Int = bInAPrice * msg.amount / self.decimal;
 
-        if ((bAmount <= self.b) && (bAmount > 0)) {
+        if ((bAmount <= self.b) && (bAmount >= 1)) {
           self.a = self.a + msg.amount;
           self.b = self.b - bAmount;
           to = self.jAddressB;
@@ -121,7 +121,7 @@ contract Task3 with Deployable {
 
         let aAmount: Int = aInBPrice * msg.amount / self.decimal;
 
-        if ((aAmount <= self.a) && (aAmount > 0)) {
+        if ((aAmount <= self.a) && (aAmount >= 1)) {
           self.b = self.b + msg.amount;
           self.a = self.a - aAmount;
           to = self.jAddressA;

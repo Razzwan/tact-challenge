@@ -51,7 +51,7 @@ describe('Task3', () => {
 			{
 				$$type: 'TokenNotification',
 				queryId: 0n,
-				amount: amount,
+				amount,
 				from,
 				forwardPayload: beginCell().endCell(),
 			}
