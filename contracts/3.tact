@@ -68,17 +68,17 @@ contract Task3 with Deployable {
 
   fun getPrice(tAddress: Address): Int {
     if (tAddress == self.jAddressA) {
-        if (self.a == 0) {
-            return 0;
-        }
-        return self.b * self.decimal / self.a;
-    }
-
-    if (tAddress == self.jAddressB) {
         if (self.b == 0) {
             return 0;
         }
         return self.a * self.decimal / self.b;
+    }
+
+    if (tAddress == self.jAddressB) {
+        if (self.a == 0) {
+            return 0;
+        }
+        return self.b * self.decimal / self.a;
     }
 
     return 0;
@@ -97,9 +97,9 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
-          let bPrice: Int = self.getPrice(self.jAddressA);
+          let bInAPrice: Int = self.getPrice(self.jAddressB);
 
-          let bAmount: Int = bPrice * msg.amount / self.decimal;
+          let bAmount: Int = bInAPrice * msg.amount / self.decimal;
 
           if ((bAmount <= self.b) && (bAmount > 0)) {
             self.a = self.a + msg.amount;
@@ -117,9 +117,9 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.b = self.b + msg.amount;
         } else {
-          let aPrice: Int = self.getPrice(self.jAddressB);
+          let aInBPrice: Int = self.getPrice(self.jAddressA);
 
-          let aAmount: Int = aPrice * msg.amount / self.decimal;
+          let aAmount: Int = aInBPrice * msg.amount / self.decimal;
 
           if ((aAmount <= self.a) && (aAmount > 0)) {
             self.b = self.b + msg.amount;
