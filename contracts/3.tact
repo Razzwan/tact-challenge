@@ -145,7 +145,7 @@ contract Task3 with Deployable {
           destination: msg.from,
           responseDestination: jAddress,
           customPayload: null,
-          forwardTonAmount: 1,
+          forwardTonAmount: ctx.readForwardFee(),
           forwardPayload: msg.forwardPayload
         }.toCell()
       });
