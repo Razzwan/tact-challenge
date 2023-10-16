@@ -97,7 +97,7 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.a = self.a + msg.amount;
         } else {
-          let bInAPrice: Int = self.getPrice(self.jAddressB);
+          let bInAPrice: Int = self.getPrice(self.jAddressA);
 
           let bAmount: Int = bInAPrice * msg.amount / self.decimal;
 
@@ -117,7 +117,7 @@ contract Task3 with Deployable {
         if (msg.from == self.owner) {
           self.b = self.b + msg.amount;
         } else {
-          let aInBPrice: Int = self.getPrice(self.jAddressA);
+          let aInBPrice: Int = self.getPrice(self.jAddressB);
 
           let aAmount: Int = aInBPrice * msg.amount / self.decimal;
 
@@ -135,14 +135,14 @@ contract Task3 with Deployable {
 
     if (amount > 0) {
         send(SendParameters{
-          to: to,
+          to: msg.from,
           value: 0,
           mode: SendRemainingValue,
           bounce: true,
           body: TokenTransfer{
             queryId: msg.queryId,
             amount: amount,
-            destination: msg.from,
+            destination: to,
             responseDestination: msg.from,
             customPayload: null,
             forwardTonAmount: 1,
