@@ -33,20 +33,20 @@ import "@stdlib/deploy";
 */
 
 message(0x7362d09c) TokenNotification {
-    queryId: Int as uint64;
-    amount: Int as coins;
-    from: Address;
-    forwardPayload: Slice as remaining;
+  queryId: Int as uint64;
+  amount: Int as coins;
+  from: Address;
+  forwardPayload: Slice as remaining;
 }
 
 message(0xf8a7ea5) TokenTransfer {
-    queryId: Int as uint64;
-    amount: Int as coins;
-    destination: Address;
-    responseDestination: Address?;
-    customPayload: Cell?;
-    forwardTonAmount: Int as coins;
-    forwardPayload: Slice as remaining;
+  queryId: Int as uint64;
+  amount: Int as coins;
+  destination: Address;
+  responseDestination: Address?;
+  customPayload: Cell?;
+  forwardTonAmount: Int as coins;
+  forwardPayload: Slice as remaining;
 }
 
 contract Task3 with Deployable {
@@ -68,17 +68,17 @@ contract Task3 with Deployable {
 
   fun getPrice(tAddress: Address): Int {
     if (tAddress == self.jAddressA) {
-        if (self.a == 0) {
-            return 0;
-        }
-        return self.b * self.decimal / self.a;
+      if (self.a == 0) {
+        return 0;
+      }
+      return self.b * self.decimal / self.a;
     }
 
     if (tAddress == self.jAddressB) {
-        if (self.b == 0) {
-            return 0;
-        }
-        return self.a * self.decimal / self.b;
+      if (self.b == 0) {
+        return 0;
+      }
+      return self.a * self.decimal / self.b;
     }
 
     return 0;
@@ -94,43 +94,43 @@ contract Task3 with Deployable {
     let amount: Int = 0;
 
     if (jAddress == self.jAddressA) {
-        if (msg.from == self.owner) {
+      if (msg.from == self.owner) {
+        self.a = self.a + msg.amount;
+      } else {
+        let bInAPrice: Int = self.getPrice(self.jAddressA);
+
+        let bAmount: Int = bInAPrice * msg.amount / self.decimal;
+
+        if ((bAmount <= self.b) && (bAmount > 0)) {
           self.a = self.a + msg.amount;
+          self.b = self.b - bAmount;
+          to = self.jAddressB;
+          amount = bAmount;
         } else {
-          let bInAPrice: Int = self.getPrice(self.jAddressA);
-
-          let bAmount: Int = bInAPrice * msg.amount / self.decimal;
-
-          if ((bAmount <= self.b) && (bAmount > 0)) {
-            self.a = self.a + msg.amount;
-            self.b = self.b - bAmount;
-            to = self.jAddressB;
-            amount = bAmount;
-          } else {
-            to = self.jAddressA;
-            amount = msg.amount;
-          }
+          to = self.jAddressA;
+          amount = msg.amount;
         }
+      }
     }
 
     if (jAddress == self.jAddressB) {
-        if (msg.from == self.owner) {
+      if (msg.from == self.owner) {
+        self.b = self.b + msg.amount;
+      } else {
+        let aInBPrice: Int = self.getPrice(self.jAddressB);
+
+        let aAmount: Int = aInBPrice * msg.amount / self.decimal;
+
+        if ((aAmount <= self.a) && (aAmount > 0)) {
           self.b = self.b + msg.amount;
+          self.a = self.a - aAmount;
+          to = self.jAddressA;
+          amount = aAmount;
         } else {
-          let aInBPrice: Int = self.getPrice(self.jAddressB);
-
-          let aAmount: Int = aInBPrice * msg.amount / self.decimal;
-
-          if ((aAmount <= self.a) && (aAmount > 0)) {
-            self.b = self.b + msg.amount;
-            self.a = self.a - aAmount;
-            to = self.jAddressA;
-            amount = aAmount;
-          } else {
-            to = self.jAddressB;
-            amount = msg.amount;
-          }
+          to = self.jAddressB;
+          amount = msg.amount;
         }
+      }
     }
 
     if (amount > 0) {

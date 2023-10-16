@@ -51,7 +51,7 @@ describe('Task3', () => {
 			{
 				$$type: 'TokenNotification',
 				queryId: 0n,
-				amount: amount * 1000000000n,
+				amount: amount,
 				from,
 				forwardPayload: beginCell().endCell(),
 			}
@@ -65,13 +65,13 @@ describe('Task3', () => {
 	it('зачисление на счет A', async () => {
 		await tokenTransfer('A', 10n, admin);
 
-		expect(await task3.getBalance(tokenA)).toBe(10n * 1000000000n);
+		expect(await task3.getBalance(tokenA)).toBe(10n);
 	});
 
 	it('зачисление на счет B', async () => {
 		await tokenTransfer('B', 2n, admin);
 
-		expect(await task3.getBalance(tokenB)).toBe(2n * 1000000000n);
+		expect(await task3.getBalance(tokenB)).toBe(2n);
 	});
 
 	it('зачисление на счет B от внешнего контракта', async () => {
@@ -80,8 +80,8 @@ describe('Task3', () => {
 
 		await tokenTransfer('B', 1n, from);
 
-		expect(await task3.getBalance(tokenB)).toBe(3n * 1000000000n);
-		expect(await task3.getBalance(tokenA)).toBe(5n * 1000000000n);
+		expect(await task3.getBalance(tokenB)).toBe(3n);
+		expect(await task3.getBalance(tokenA)).toBe(5n);
 	});
 
 	it('зачисление на счет A от внешнего контракта', async () => {
@@ -90,8 +90,8 @@ describe('Task3', () => {
 
 		const t = await tokenTransfer('A', 10n, from);
 
-		expect(await task3.getBalance(tokenA)).toBe(20n * 1000000000n);
-		expect(await task3.getBalance(tokenB)).toBe(0n * 1000000000n);
+		expect(await task3.getBalance(tokenA)).toBe(20n);
+		expect(await task3.getBalance(tokenB)).toBe(0n);
 
 		expect(t.transactions).toHaveTransaction({
 			from: expect.any,
