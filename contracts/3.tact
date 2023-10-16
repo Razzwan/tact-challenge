@@ -134,21 +134,21 @@ contract Task3 with Deployable {
     }
 
     if (amount > 0) {
-        send(SendParameters{
-          to: msg.from,
-          value: 0,
-          mode: SendRemainingValue,
-          bounce: true,
-          body: TokenTransfer{
-            queryId: msg.queryId,
-            amount: amount,
-            destination: to,
-            responseDestination: msg.from,
-            customPayload: null,
-            forwardTonAmount: 1,
-            forwardPayload: msg.forwardPayload
-          }.toCell()
-        });
+      send(SendParameters{
+        to: to,
+        value: 0,
+        mode: SendRemainingValue,
+        bounce: true,
+        body: TokenTransfer{
+          queryId: msg.queryId,
+          amount: amount,
+          destination: msg.from,
+          responseDestination: null,
+          customPayload: null,
+          forwardTonAmount: 1,
+          forwardPayload: msg.forwardPayload
+        }.toCell()
+      });
     }
   }
 
@@ -158,11 +158,11 @@ contract Task3 with Deployable {
 
   get fun balance(token: Address): Int {
     if (token == self.jAddressA) {
-      return self.a;
+      return self.b;
     }
 
     if (token == self.jAddressB) {
-      return self.b;
+      return self.a;
     }
 
     return 0;
