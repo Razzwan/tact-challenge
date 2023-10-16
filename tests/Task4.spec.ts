@@ -1,6 +1,6 @@
-import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/sandbox';
-import {Address, Dictionary, beginCell, Cell, toNano} from 'ton-core';
-import {Task4} from '../wrappers/Task4';
+import { Blockchain, SandboxContract, SendMessageResult } from '@ton-community/sandbox';
+import { Address, Dictionary, beginCell, Cell, toNano } from 'ton-core';
+import { Task4 } from '../wrappers/Task4';
 import '@ton-community/test-utils';
 
 describe('Task4', () => {
@@ -108,23 +108,7 @@ describe('Task4', () => {
 
 		let r = await withdrawalNft(owner2, nft);
 
-		expect(r.events[0].type).toBe("message_sent");
+		expect(r.events[0].type).toBe('message_sent');
 		// expect((r.events[0] as any).body.toString()).toBe("message_sent");
 	});
-
-	fit('test', async () => {
-		const futureTime = new Date();
-		futureTime.setDate(futureTime.getDate() + 7);
-		const futureUtc = BigInt(Math.round(futureTime.getTime() / 1000));
-		await assignOwnership(owner, beginCell().storeAddress(nft).storeUint(futureUtc, 32).endCell());
-
-		const cell = await task4.getT();
-		// 299 150 - 32 117 149
-		const dict = cell.beginParse().loadBuffer(37);
-		// const keys = dict.keys();
-		// const values = dict.values();
-		expect(dict.toString()).toBe('test');
-	});
 });
-
-

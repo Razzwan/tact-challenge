@@ -1,10 +1,11 @@
 # 🏆 Welcome to Tact Challenge
+
 ### by TON Foundation
 
 ## 📝 Tasks
 
-1. [task1](/contracts/1.tact) - Counter contract 
-2. [task2](/contracts/2.tact) - Proxy contract 
+1. [task1](/contracts/1.tact) - Counter contract
+2. [task2](/contracts/2.tact) - Proxy contract
 3. [task3](/contracts/3.tact) - Dex contract
 4. [task4](/contracts/4.tact) - NFT locker contract
 5. [task5](/contracts/5.tact) - NFT random swap
@@ -35,15 +36,15 @@ We ask participants not to change the signature (number, order, and types of arg
 
 5. **Solution Evaluation**: If at least one of your solutions works well, your submission will be counted. Feel free to push solutions for more tasks; GitHub actions will run your code against tests and count successful submissions. To see a detailed report on your submission, proceed to GitHub Actions tab and you will see a similar report along with possible errors if present:
 <div align="center">
-  
-| Task ID | Compiled | Tests Passed | Points | Gas Used | Compilation Error |
-|---------|:--------:|:------------:|:------:|:----------------------:|:-----------------:|
-| 1 | ❌ | ❌ | 0 | N/A | [Error Details](#compilation-error-task-1) |
-| 2 | ✅ | ❌ 0/6 | 0 | 0 |  |
-| 3 | ✅ | ✅ 10/10 | 5.127 | 491,235,717 |  |
-| 4 | ❌ | ❌ | 0 | N/A | [Error Details](#compilation-error-task-4) |
-| 5 | ❌ | ❌ | 0 | N/A | [Error Details](#compilation-error-task-5) |
-  
+
+| Task ID | Compiled | Tests Passed | Points |  Gas Used   |             Compilation Error              |
+| ------- | :------: | :----------: | :----: | :---------: | :----------------------------------------: |
+| 1       |    ❌    |      ❌      |   0    |     N/A     | [Error Details](#compilation-error-task-1) |
+| 2       |    ✅    |    ❌ 0/6    |   0    |      0      |                                            |
+| 3       |    ✅    |   ✅ 10/10   | 5.127  | 491,235,717 |                                            |
+| 4       |    ❌    |      ❌      |   0    |     N/A     | [Error Details](#compilation-error-task-4) |
+| 5       |    ❌    |      ❌      |   0    |     N/A     | [Error Details](#compilation-error-task-5) |
+
 </div>
 
 6. **Check Your Points**: To check your solution points, review the logs of the GitHub action for your latest commit. Additionally, you can find your solution points in the menu button inside of the Telegram bot.
@@ -51,6 +52,7 @@ We ask participants not to change the signature (number, order, and types of arg
 **Best of luck with your submissions!**
 
 ## ‼️ Important rules:
+
 - It's forbidden to use any FunC/Fift code inside of submitted Tact solutions. Participants who will have FunC/Fift code in their submissions will be disqualified.
 - Please don't share your solution's code with anybody. If someone's submission will be suspected of using your code - both participants will be disqualified. Repeated case will cause lifetime ban from TON Smart Challenges.
 
@@ -63,6 +65,7 @@ Each task can bring you a max of 6 points. You get 5 points for solving a task. 
 **Minimum amount** of points to be eligible for the prize is **6 points**.
 
 Prizes:
+
 - The top 15% of participants share $10,000 in TON
 - The middle 30% of participants share $10,000 in TON
 - The bottom 55% of participants share $10,000 in TON

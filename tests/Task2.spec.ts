@@ -1,6 +1,6 @@
-import {Blockchain, SandboxContract} from '@ton-community/sandbox';
-import {Address, toNano} from 'ton-core';
-import {Task2} from '../wrappers/Task2';
+import { Blockchain, SandboxContract } from '@ton-community/sandbox';
+import { Address, toNano } from 'ton-core';
+import { Task2 } from '../wrappers/Task2';
 import '@ton-community/test-utils';
 
 describe('Task2', () => {
@@ -31,7 +31,5 @@ describe('Task2', () => {
 		});
 	});
 
-	it('test', async () => {
-	});
+	it('test', async () => {});
 });
-

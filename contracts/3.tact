@@ -84,6 +84,25 @@ contract Task3 with Deployable {
     return 0;
   }
 
+  fun sendJettons(to: Address, amount: Int, msg: TokenNotification) {
+    let ctx: Context = context();
+    send(SendParameters{
+      to: to,
+      value: 0,
+      mode: SendRemainingValue,
+      bounce: true,
+      body: TokenTransfer{
+        queryId: msg.queryId,
+        amount: amount,
+        destination: msg.from,
+        responseDestination: null,
+        customPayload: null,
+        forwardTonAmount: ctx.readForwardFee(),
+        forwardPayload: msg.forwardPayload
+      }.toCell()
+    });
+  }
+
   receive(msg: TokenNotification) {
     let ctx: Context = context();
     let jAddress: Address = ctx.sender;
@@ -104,11 +123,9 @@ contract Task3 with Deployable {
         if ((bAmount <= self.b) && (bAmount >= 1)) {
           self.a = self.a + msg.amount;
           self.b = self.b - bAmount;
-          to = self.jAddressB;
-          amount = bAmount;
+          self.sendJettons(self.jAddressB, bAmount, msg);
         } else {
-          to = self.jAddressA;
-          amount = msg.amount;
+          self.sendJettons(self.jAddressA, msg.amount, msg);
         }
       }
     }
@@ -124,31 +141,11 @@ contract Task3 with Deployable {
         if ((aAmount <= self.a) && (aAmount >= 1)) {
           self.b = self.b + msg.amount;
           self.a = self.a - aAmount;
-          to = self.jAddressA;
-          amount = aAmount;
+          self.sendJettons(self.jAddressA, aAmount, msg);
         } else {
-          to = self.jAddressB;
-          amount = msg.amount;
+          self.sendJettons(self.jAddressB, msg.amount, msg);
         }
       }
-    }
-
-    if (amount > 0) {
-      send(SendParameters{
-        to: to,
-        value: 0,
-        mode: SendRemainingValue,
-        bounce: true,
-        body: TokenTransfer{
-          queryId: msg.queryId,
-          amount: amount,
-          destination: msg.from,
-          responseDestination: jAddress,
-          customPayload: null,
-          forwardTonAmount: ctx.readForwardFee(),
-          forwardPayload: msg.forwardPayload
-        }.toCell()
-      });
     }
   }
 

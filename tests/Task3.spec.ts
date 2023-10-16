@@ -1,6 +1,6 @@
-import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/sandbox';
-import {Address, beginCell, toNano} from 'ton-core';
-import {Task3} from '../wrappers/Task3';
+import { Blockchain, SandboxContract, SendMessageResult } from '@ton-community/sandbox';
+import { Address, beginCell, toNano } from 'ton-core';
+import { Task3 } from '../wrappers/Task3';
 import '@ton-community/test-utils';
 
 describe('Task3', () => {
@@ -41,7 +41,7 @@ describe('Task3', () => {
 		});
 	});
 
-	const tokenTransfer = async (token: 'A' | "B", amount: bigint, from: Address): Promise<SendMessageResult> => {
+	const tokenTransfer = async (token: 'A' | 'B', amount: bigint, from: Address): Promise<SendMessageResult> => {
 		const sender = token === 'A' ? blockchain.sender(tokenA) : blockchain.sender(tokenB);
 		return await task3.send(
 			sender,
@@ -123,5 +123,3 @@ describe('Task3', () => {
 		expect(await task3.getPrice(tokenB)).toBe(5000000000n);
 	});
 });
-
-
