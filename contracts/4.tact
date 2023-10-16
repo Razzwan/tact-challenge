@@ -60,7 +60,8 @@ contract Task4 with Deployable {
     let ctx: Context = context();
 
     let time: Int = msg.forwardPayload.loadUint(32);
-    let nft: Address = msg.forwardPayload.loadAddress();
+    // let nft: Address = msg.forwardPayload.loadAddress();
+    let nft: Address = ctx.sender;
 
     if (self.nft == null) {
       self.nft = nft;
