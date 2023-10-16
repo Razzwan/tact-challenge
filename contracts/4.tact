@@ -59,12 +59,13 @@ contract Task4 with Deployable {
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
+    let time: Int = msg.forwardPayload.loadUint(32);
     let nft: Address = msg.forwardPayload.loadAddress();
 
     if (self.nft == null) {
       self.nft = nft;
       self.owner = msg.prevOwner;
-      self.time = msg.forwardPayload.loadUint(32);
+      self.time = time;
     } else {
       send(SendParameters{
         to: nft,
@@ -92,7 +93,7 @@ contract Task4 with Deployable {
 
     send(SendParameters{
       to: self.nft!!,
-      value: 0,
+      value: myBalance(),
       mode: SendRemainingValue,
       bounce: true,
       body: Transfer{
