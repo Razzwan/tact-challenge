@@ -1,11 +1,9 @@
 import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/sandbox';
-import {Address, Dictionary, beginCell, Sender, toNano} from 'ton-core';
+import {Address, beginCell, Sender, toNano} from 'ton-core';
 import {Task5} from '../wrappers/Task5';
 import '@ton-community/test-utils';
 
-import { verify } from "@tact-lang/compiler";
-const pkg: string = '...';
-const res = await verify(pkg);
+// import { verify } from "@tact-lang/compiler";
 
 type S = Sender & {
 	address: Address;

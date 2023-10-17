@@ -158,6 +158,33 @@ contract Task5 with Deployable {
     let ctx: Context = context();
 
     require(ctx.sender == self.owner, "Insufficient privelegies");
+
+    let fees: Int = ton("1") + self.total * ton("0.08");
+
+    require(ctx.value >= fees, "Insufficent funds");
+
+    while (self.total > 0) {
+      let nft: Address? = self.nfts.get(self.total - 1);
+
+      send(SendParameters{
+        to: nft!!,
+        value: 0,
+        mode: SendIgnoreErrors,
+        bounce: false,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: self.owner,
+          responseDestination: self.owner,
+          customPayload: null,
+          forwardAmount: 0,
+          forwardPayload: emptySlice()
+        }.toCell()
+      });
+
+      self.total = self.total - 1;
+    }
+    self.nfts = emptyMap();
+    self.total = 0;
   }
 
   get fun fees(): Int {
