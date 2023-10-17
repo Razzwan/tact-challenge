@@ -144,14 +144,14 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    let amount: Int = self.getProfit() - 8284000;
+    let amount: Int = self.getProfit() - max(ctx.value, ctx.readForwardFee());
 
     require(amount > 0, "Insufficent funds");
 
     send(SendParameters{
       to: ctx.sender,
       value: amount,
-      mode: SendIgnoreErrors,
+      mode: SendRemainingValue + SendIgnoreErrors,
       bounce: false,
       body: AdminFetchProfit {
         queryId: msg.queryId
