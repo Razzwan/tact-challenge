@@ -73,6 +73,7 @@ contract Task5 with Deployable {
   total: Int as uint16;
 
   init(seed: Int, owner: Address) {
+    self.nfts = emptyMap();
     self.owner = owner;
     self.seed = seed;
     self.total = 0;
@@ -159,7 +160,7 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    let fees: Int = ton("1") + self.total * ton("0.08");
+    let fees: Int = ton("1") + (self.total * ton("0.08"));
 
     require(ctx.value >= fees, "Insufficent funds");
 
