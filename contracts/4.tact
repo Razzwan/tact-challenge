@@ -72,7 +72,7 @@ contract Task4 with Deployable {
       self.reply(Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
-        responseDestination: myAddress(), // точно правильно!!!
+        responseDestination: msg.prevOwner, // точно правильно!!!
         customPayload: null,
         forwardAmount: ton("0.01"),
         forwardPayload: msg.forwardPayload
