@@ -64,7 +64,7 @@ contract Task4 with Deployable {
     if ((self.nft == null) && (time != null)) {
       self.nft = nft;
       self.owner = msg.prevOwner;
-      self.time = time;
+      self.time = now() + time;
     } else {
       send(SendParameters{
         to: nft,
