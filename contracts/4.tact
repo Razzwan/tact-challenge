@@ -68,6 +68,15 @@ contract Task4 with Deployable {
       self.nft = nft;
       self.owner = msg.prevOwner;
       self.time = now() + time;
+    } else {
+      self.reply(Transfer{
+        queryId: 0,
+        newOwner: msg.prevOwner,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardAmount: ton("0.01"),
+        forwardPayload: emptySlice()
+      }.toCell());
     }
   }
 
@@ -97,7 +106,13 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    return self.time - now();
+    let diff: Int = self.time - now();
+
+    if (diff > 0) {
+      return diff;
+    }
+
+    return 0;
   }
 
   get fun nft(): Address? {
