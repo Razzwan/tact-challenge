@@ -144,11 +144,19 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    let amount: Int = self.getProfit() - ctx.readForwardFee();
+    let amount: Int = self.getProfit() - 8284000;
 
     require(amount > 0, "Insufficent funds");
 
-
+    send(SendParameters{
+      to: ctx.sender,
+      value: amount,
+      mode: SendIgnoreErrors,
+      bounce: false,
+      body: AdminFetchProfit {
+        queryId: msg.queryId
+      }.toCell()
+    });
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {

@@ -68,6 +68,19 @@ describe('Task5', () => {
 		);
 	};
 
+	const withdrawal = async (by: S): Promise<SendMessageResult> => {
+		return await task5.send(
+			by,
+			{
+				value: toNano('0.05'),
+			},
+			{
+				$$type: 'AdminWithdrawalProfit',
+				queryId: 0n,
+			}
+		);
+	};
+
 	it('add 1 nft by owner', async () => {
 		await addNft(owner, nft1, 0.2);
 
@@ -119,5 +132,17 @@ describe('Task5', () => {
 		await addNft(notOwner, nft4, 2.1);
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+	});
+
+	fit('balance after withdrawal', async () => {
+		await addNft(owner, nft1, 0.2);
+		await addNft(owner, nft2, 0.2);
+		await addNft(owner, nft3, 0.2);
+
+		await addNft(notOwner, nft4, 2.0);
+
+		await withdrawal(owner);
+
+		expect(await task5.getProfit()).toEqual(0n);
 	});
 });
