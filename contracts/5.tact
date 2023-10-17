@@ -79,7 +79,7 @@ contract Task5 with Deployable {
     self.total = 0;
   }
 
-  fun getFees(): Int {
+  fun getProfit(): Int {
     return myBalance() - self.MinTonsForStorage;
   }
 
@@ -89,15 +89,15 @@ contract Task5 with Deployable {
     let newNft: Address = ctx.sender;
 
     if (msg.prevOwner == self.owner) {
-      let minRequiredTon: Int = self.MinTonsForStorage + ctx.readForwardFee() + 8637989;
-      require( myBalance() > minRequiredTon, "Insufficent funds");
+      // let minRequiredTon: Int = self.MinTonsForStorage + ctx.readForwardFee() + 8637989;
+      // require( myBalance() > minRequiredTon, "Insufficent funds");
 
       self.nfts.set(self.total, newNft);
       self.total = self.total + 1;
     } else {
-      require(self.total > 0, "No NFT in list");
+      // require(self.total > 0, "No NFT in list");
 
-      if (ctx.value < 2100000000) {
+      if ((ctx.value < ton("2.1")) || (self.total == 0)) {
         send(SendParameters{
           to: newNft,
           value: 0,
@@ -115,14 +115,14 @@ contract Task5 with Deployable {
         return;
       }
 
-      let idx: Int = random(0, self.total);
+      let idx: Int = random(0, self.total - 1);
       let nft: Address? = self.nfts.get(idx);
 
       send(SendParameters{
         to: nft!!,
         value: 0,
         mode: SendIgnoreErrors,
-        bounce: true,
+        bounce: false,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -142,9 +142,9 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner, "Insufficient privelegies");
 
-    let amount: Int = self.getFees() - ctx.readForwardFee();
+    let amount: Int = self.getProfit() - ctx.readForwardFee();
 
-    require(amount > self.MinTonsForStorage, "Insufficent funds");
+    require(amount > 0, "Insufficent funds");
 
     send(SendParameters{
       to: ctx.sender,
@@ -172,7 +172,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: nft!!,
         value: 0,
-        mode: SendIgnoreErrors,
+        mode: SendRemainingValue + SendIgnoreErrors,
         bounce: false,
         body: Transfer{
           queryId: msg.queryId,
@@ -187,11 +187,10 @@ contract Task5 with Deployable {
       self.total = self.total - 1;
     }
     self.nfts = emptyMap();
-    self.total = 0;
   }
 
   get fun profit(): Int {
-    return self.getFees();
+    return self.getProfit();
   }
 
   get fun nfts(): map<Int as uint16, Address> {

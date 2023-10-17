@@ -71,7 +71,7 @@ describe('Task5', () => {
 	it('add 1 nft by owner', async () => {
 		await addNft(owner, nft1, 0.2);
 
-		expect(await task5.getFees()).toBeGreaterThanOrEqual(0n);
+		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 	});
@@ -80,7 +80,7 @@ describe('Task5', () => {
 		await addNft(owner, nft1, 0.2);
 		await addNft(owner, nft2, 0.2);
 
-		expect(await task5.getFees()).toBeGreaterThanOrEqual(0n);
+		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
@@ -91,7 +91,7 @@ describe('Task5', () => {
 		await addNft(owner, nft2, 0.2);
 		await addNft(owner, nft3, 0.2);
 
-		expect(await task5.getFees()).toBeGreaterThanOrEqual(0n);
+		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
