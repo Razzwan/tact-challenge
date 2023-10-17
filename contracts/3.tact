@@ -41,13 +41,13 @@ message(0x7362d09c) TokenNotification {
 
 // To simplify the testing process and the specificity of the messages being sent, we decided to add clear default values in this transaction
 message(0xf8a7ea5) TokenTransfer {
-     queryId: Int as uint64; // should be 0
-     amount: Int as coins; // should be amount of jettons to send
-     destination: Address; // should be user address / TokenNotification.from
-     responseDestination: Address?; // should be myAddress()
-     customPayload: Cell?; // should be null
-     forwardTonAmount: Int as coins; // should be ton("0.01")
-     forwardPayload: Slice as remaining; // should be emptySlice()
+  queryId: Int as uint64; // should be 0
+  amount: Int as coins; // should be amount of jettons to send
+  destination: Address; // should be user address / TokenNotification.from
+  responseDestination: Address?; // should be myAddress()
+  customPayload: Cell?; // should be null
+  forwardTonAmount: Int as coins; // should be ton("0.01")
+  forwardPayload: Slice as remaining; // should be emptySlice()
 }
 
 contract Task3 with Deployable {
@@ -67,18 +67,12 @@ contract Task3 with Deployable {
     self.decimal = 1000000000;
   }
 
-  fun getPrice(tAddress: Address): Int {
-    if (tAddress == self.jAddressA) {
-      if (self.a == 0) {
-        return 0;
-      }
+  fun getPrice(t: Address): Int {
+    if (t == self.jAddressA && self.a != 0) {
       return self.b * self.decimal / self.a;
     }
 
-    if (tAddress == self.jAddressB) {
-      if (self.b == 0) {
-        return 0;
-      }
+    if (t == self.jAddressB && self.b != 0) {
       return self.a * self.decimal / self.b;
     }
 
@@ -106,22 +100,14 @@ contract Task3 with Deployable {
 
   receive(msg: TokenNotification) {
     let ctx: Context = context();
-    let jAddress: Address = ctx.sender;
 
-    require((jAddress == self.jAddressA) || (jAddress == self.jAddressB), "Unsupported jetton");
-
-    let to: Address = self.jAddressA;
-    let amount: Int = 0;
-
-    if (jAddress == self.jAddressA) {
+    if (ctx.sender == self.jAddressA) {
       if (msg.from == self.owner) {
         self.a = self.a + msg.amount;
       } else {
-        let bInAPrice: Int = self.getPrice(self.jAddressA);
+        let bAmount: Int = self.getPrice(self.jAddressA) * msg.amount / self.decimal;
 
-        let bAmount: Int = bInAPrice * msg.amount / self.decimal;
-
-        if ((bAmount <= self.b) && (bAmount >= 1)) {
+        if (bAmount <= self.b && bAmount > 0) {
           self.a = self.a + msg.amount;
           self.b = self.b - bAmount;
           self.sendJettons(self.jAddressB, bAmount, msg);
@@ -129,17 +115,16 @@ contract Task3 with Deployable {
           self.sendJettons(self.jAddressA, msg.amount, msg);
         }
       }
+      return;
     }
 
-    if (jAddress == self.jAddressB) {
+    if (ctx.sender == self.jAddressB) {
       if (msg.from == self.owner) {
         self.b = self.b + msg.amount;
       } else {
-        let aInBPrice: Int = self.getPrice(self.jAddressB);
+        let aAmount: Int = self.getPrice(self.jAddressB) * msg.amount / self.decimal;
 
-        let aAmount: Int = aInBPrice * msg.amount / self.decimal;
-
-        if ((aAmount <= self.a) && (aAmount >= 1)) {
+        if (aAmount <= self.a && aAmount > 0) {
           self.b = self.b + msg.amount;
           self.a = self.a - aAmount;
           self.sendJettons(self.jAddressA, aAmount, msg);
@@ -147,7 +132,10 @@ contract Task3 with Deployable {
           self.sendJettons(self.jAddressB, msg.amount, msg);
         }
       }
+      return;
     }
+
+    require(false, "Unsupported jetton");
   }
 
   get fun price(token: Address): Int {
@@ -159,10 +147,6 @@ contract Task3 with Deployable {
       return self.a;
     }
 
-    if (token == self.jAddressB) {
-      return self.b;
-    }
-
-    return 0;
+    return self.b;
   }
 }
