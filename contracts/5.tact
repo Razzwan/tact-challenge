@@ -99,6 +99,7 @@ contract Task5 with Deployable {
 
       let excess: Int = ctx.value - ton("2.1");
       if ((excess < 0) || (self.total == 0)) {
+        require(ctx.value > ton("0.1"), "Insufficent funds");
         send(SendParameters{
           to: newNft,
           value: 0,
@@ -121,7 +122,7 @@ contract Task5 with Deployable {
 
       send(SendParameters{
         to: nft!!,
-        value: excess - ton("0.01"),
+        value: 0,
         mode: 0,
         bounce: true,
         body: Transfer{
@@ -129,8 +130,8 @@ contract Task5 with Deployable {
           newOwner: msg.prevOwner,
           responseDestination: msg.prevOwner,
           customPayload: null,
-          forwardAmount: ton("0.01"),
-          forwardPayload: msg.forwardPayload
+          forwardAmount: excess,
+          forwardPayload: emptySlice()
         }.toCell()
       });
 
