@@ -79,6 +79,10 @@ contract Task5 with Deployable {
     self.total = 0;
   }
 
+  fun getFees(): Int {
+    return myBalance() - self.MinTonsForStorage;
+  }
+
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
@@ -131,10 +135,6 @@ contract Task5 with Deployable {
 
       self.nfts.set(idx, newNft);
     }
-  }
-
-  fun getFees(): Int {
-    return myBalance() - self.MinTonsForStorage;
   }
 
   receive(msg: AdminWithdrawalProfit) {
@@ -190,7 +190,7 @@ contract Task5 with Deployable {
     self.total = 0;
   }
 
-  get fun fees(): Int {
+  get fun profit(): Int {
     return self.getFees();
   }
 
