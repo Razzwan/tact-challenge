@@ -131,7 +131,7 @@ contract Task5 with Deployable {
           responseDestination: msg.prevOwner,
           customPayload: null,
           forwardAmount: excess,
-          forwardPayload: msg.forwardPayload
+          forwardPayload: emptySlice()
         }.toCell()
       });
 
@@ -148,15 +148,7 @@ contract Task5 with Deployable {
 
     require(amount > 0, "Insufficent funds");
 
-    send(SendParameters{
-      to: ctx.sender,
-      value: amount,
-      mode: SendIgnoreErrors,
-      bounce: false,
-      body: AdminFetchProfit {
-        queryId: msg.queryId
-      }.toCell()
-    });
+
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
