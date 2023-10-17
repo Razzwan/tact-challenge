@@ -97,7 +97,8 @@ contract Task5 with Deployable {
     } else {
       // require(self.total > 0, "No NFT in list");
 
-      if ((ctx.value < ton("2.1")) || (self.total == 0)) {
+      let excess: Int = ctx.value - ton("2.1");
+      if ((excess < 0) || (self.total == 0)) {
         send(SendParameters{
           to: newNft,
           value: 0,
@@ -120,7 +121,7 @@ contract Task5 with Deployable {
 
       send(SendParameters{
         to: nft!!,
-        value: 0,
+        value: excess,
         mode: SendIgnoreErrors,
         bounce: false,
         body: Transfer{
