@@ -57,11 +57,10 @@ contract Task4 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
-    let ctx: Context = context();
-
+    let flag: Int = msg.forwardPayload.loadUint(32);
     let time: Int = msg.forwardPayload.loadUint(32);
-    // let nft: Address = msg.forwardPayload.loadAddress();
-    let nft: Address = ctx.sender;
+
+    let nft: Address = sender();
 
     if (self.nft == null) {
       self.nft = nft;
@@ -74,21 +73,19 @@ contract Task4 with Deployable {
         mode: SendRemainingValue,
         bounce: true,
         body: Transfer{
-            queryId: msg.queryId,
+            queryId: 0,
             newOwner: msg.prevOwner,
-            responseDestination: ctx.sender,
+            responseDestination: myAddress(),
             customPayload: null,
-            forwardAmount: 2,
-            forwardPayload: msg.forwardPayload
+            forwardAmount: ton("0.01"),
+            forwardPayload: emptySlice()
         }.toCell()
       });
     }
   }
 
   receive(msg: NftWithdrawal) {
-    let ctx: Context = context();
-
-    require(self.owner == ctx.sender, "Invalid sender");
+    require(self.owner == sender(), "Invalid sender");
 
     require(self.time!! - now() <= 0, "NFT is still locked");
 
@@ -98,12 +95,12 @@ contract Task4 with Deployable {
       mode: SendRemainingBalance + SendRemainingValue,
       bounce: true,
       body: Transfer{
-        queryId: msg.queryId,
-        newOwner: ctx.sender,
-        responseDestination: ctx.sender,
+        queryId: 0,
+        newOwner: sender(),
+        responseDestination: myAddress(),
         customPayload: null,
-        forwardAmount: 2,
-        forwardPayload: emptyCell().beginParse()
+        forwardAmount: ton("0.01"),
+        forwardPayload: emptySlice()
       }.toCell()
     });
   }
