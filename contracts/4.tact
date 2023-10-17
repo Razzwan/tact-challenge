@@ -117,7 +117,13 @@ contract Task4 with Deployable {
         return 0;
     }
 
-    return self.time!! - now();
+    let diff: Int = self.time!! - now();
+
+    if (diff > 0) {
+      return diff;
+    }
+
+    return 0;
   }
 
   get fun nft(): Address? {
