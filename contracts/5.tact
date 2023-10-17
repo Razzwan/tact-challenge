@@ -99,20 +99,7 @@ contract Task5 with Deployable {
 
       let excess: Int = ctx.value - ton("2.1");
       if ((excess < 0) || (self.total == 0)) {
-        send(SendParameters{
-          to: newNft,
-          value: 0,
-          mode: SendRemainingValue + SendIgnoreErrors,
-          bounce: false,
-          body: Transfer{
-            queryId: msg.queryId,
-            newOwner: msg.prevOwner,
-            responseDestination: msg.prevOwner,
-            customPayload: null,
-            forwardAmount: 0,
-            forwardPayload: emptySlice()
-          }.toCell()
-        });
+
         return;
       }
 
