@@ -162,7 +162,7 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
 
-    require(ctx.sender == self.owner, "Insufficient privelegies");
+    require(ctx.sender == self.owner, "Invalid sender");
 
     let fees: Int = ton("1") + (self.total * ton("0.08"));
 
@@ -174,7 +174,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: nft!!,
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: SendIgnoreErrors,
         bounce: false,
         body: Transfer{
           queryId: msg.queryId,

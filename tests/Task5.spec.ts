@@ -134,7 +134,7 @@ describe('Task5', () => {
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 	});
 
-	fit('balance after withdrawal', async () => {
+	it('balance after withdrawal', async () => {
 		await addNft(owner, nft1, 0.2);
 		await addNft(owner, nft2, 0.2);
 		await addNft(owner, nft3, 0.2);
