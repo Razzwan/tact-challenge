@@ -45,9 +45,8 @@ contract Task2 with Deployable {
       bounce: true,
       body: beginCell()
         .storeAddress(sender())
-        .storeRef(
-            beginCell().storeSlice(msg).endCell()
-        ).endCell()
+        .storeRef(msg.asCell())
+        .endCell()
     });
   }
 }
