@@ -106,13 +106,7 @@ contract Task4 with Deployable {
   }
 
   get fun time(): Int {
-    let diff: Int = self.time - now();
-
-    if (diff > 0) {
-      return diff;
-    }
-
-    return 0;
+    return self.time - now();
   }
 
   get fun nft(): Address? {
