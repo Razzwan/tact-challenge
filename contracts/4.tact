@@ -70,9 +70,9 @@ contract Task4 with Deployable {
       self.time = now() + time;
     } else {
       self.reply(Transfer{
-        queryId: msg.queryId,
+        queryId: 0,
         newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner, // точно правильно!!!
+        responseDestination: msg.prevOwner,
         customPayload: null,
         forwardAmount: ton("0.01"),
         forwardPayload: msg.forwardPayload
@@ -96,7 +96,7 @@ contract Task4 with Deployable {
       mode: SendRemainingBalance,
       bounce: true,
       body: Transfer{
-        queryId: msg.queryId,
+        queryId: 0,
         newOwner: sender,
         responseDestination: sender,
         customPayload: null,
