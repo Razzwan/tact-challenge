@@ -69,20 +69,14 @@ contract Task4 with Deployable {
       self.owner = msg.prevOwner;
       self.time = now() + time;
     } else {
-      send(SendParameters{
-        to: nft,
-        value: 0,
-        mode: SendRemainingValue,
-        bounce: true,
-        body: Transfer{
-          queryId: 0,
-          newOwner: msg.prevOwner,
-          responseDestination: myAddress(),
-          customPayload: null,
-          forwardAmount: ton("0.01"),
-          forwardPayload: emptySlice()
-        }.toCell()
-      });
+      self.reply(Transfer{
+        queryId: 0,
+        newOwner: msg.prevOwner,
+        responseDestination: myAddress(),
+        customPayload: null,
+        forwardAmount: ton("0.01"),
+        forwardPayload: emptySlice()
+      }.toCell());
     }
   }
 
