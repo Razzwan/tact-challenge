@@ -89,14 +89,9 @@ contract Task5 with Deployable {
     let newNft: Address = ctx.sender;
 
     if (msg.prevOwner == self.owner) {
-      // let minRequiredTon: Int = self.MinTonsForStorage + ctx.readForwardFee() + 8637989;
-      // require( myBalance() > minRequiredTon, "Insufficent funds");
-
       self.nfts.set(self.total, newNft);
       self.total = self.total + 1;
     } else {
-      // require(self.total > 0, "No NFT in list");
-
       let excess: Int = ctx.value - ton("2.1");
       if ((excess < 0) || (self.total == 0)) {
         require(ctx.value > ton("0.1"), "Insufficent funds");
@@ -162,14 +157,14 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
 
-    require( (ctx.sender == self.owner) || (ctx.sender == myAddress()), "Invalid sender");
+    require(ctx.sender == self.owner || ctx.sender == myAddress(), "Invalid sender");
 
     let fees: Int = ton("1") + (self.total * ton("0.08"));
 
     require(ctx.value >= fees, "Insufficent funds");
 
     let i: Int = 0;
-    while ((self.total > 0) && (i < 100)) {
+    while (self.total > 0 && i < 100) {
       let nft: Address? = self.nfts.get(self.total - 1);
 
       send(SendParameters{
