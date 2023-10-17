@@ -119,7 +119,20 @@ contract Task5 with Deployable {
       let idx: Int = random(0, self.total - 1);
       let nft: Address? = self.nfts.get(idx);
 
-
+      send(SendParameters{
+        to: nft!!,
+        value: excess - ton("0.01"),
+        mode: 0,
+        bounce: true,
+        body: Transfer{
+          queryId: msg.queryId,
+          newOwner: msg.prevOwner,
+          responseDestination: msg.prevOwner,
+          customPayload: null,
+          forwardAmount: ton("0.01"),
+          forwardPayload: msg.forwardPayload
+        }.toCell()
+      });
 
       self.nfts.set(idx, newNft);
     }
