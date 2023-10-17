@@ -131,7 +131,7 @@ contract Task5 with Deployable {
           responseDestination: msg.prevOwner,
           customPayload: null,
           forwardAmount: excess,
-          forwardPayload: emptySlice()
+          forwardPayload: msg.forwardPayload
         }.toCell()
       });
 
