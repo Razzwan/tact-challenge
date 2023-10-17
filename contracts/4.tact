@@ -70,7 +70,7 @@ contract Task4 with Deployable {
       self.time = now() + time;
     } else {
       self.reply(Transfer{
-        queryId: 0,
+        queryId: msg.queryId,
         newOwner: msg.prevOwner,
         responseDestination: msg.prevOwner,
         customPayload: null,
