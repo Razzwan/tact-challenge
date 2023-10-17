@@ -27,18 +27,18 @@ import "@stdlib/deploy";
 */
 
 message(0x05138d91) OwnershipAssigned {
-    queryId: Int as uint64;
-    prevOwner: Address;
-    forwardPayload: Slice as remaining;
+  queryId: Int as uint64;
+  prevOwner: Address;
+  forwardPayload: Slice as remaining;
 }
 
 message(0x5fcc3d14) Transfer {
-    queryId: Int as uint64;
-    newOwner: Address;
-    responseDestination: Address;
-    customPayload: Cell?;
-    forwardAmount: Int as coins;
-    forwardPayload: Slice as remaining;
+  queryId: Int as uint64;
+  newOwner: Address;
+  responseDestination: Address;
+  customPayload: Cell?;
+  forwardAmount: Int as coins;
+  forwardPayload: Slice as remaining;
 }
 
 message NftWithdrawal {
@@ -61,7 +61,7 @@ contract Task4 with Deployable {
 
     let time: Int = msg.forwardPayload.loadUint(32);
 
-    if ((self.nft == null) && (time != null) && (time > now())) {
+    if ((self.nft == null) && (time != null)) {
       self.nft = nft;
       self.owner = msg.prevOwner;
       self.time = time;
@@ -72,7 +72,7 @@ contract Task4 with Deployable {
         mode: SendRemainingValue,
         bounce: true,
         body: Transfer{
-          queryId: 0,
+          queryId: msg.queryId,
           newOwner: msg.prevOwner,
           responseDestination: myAddress(),
           customPayload: null,
