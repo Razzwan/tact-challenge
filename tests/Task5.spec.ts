@@ -3,6 +3,10 @@ import {Address, Dictionary, beginCell, Sender, toNano} from 'ton-core';
 import {Task5} from '../wrappers/Task5';
 import '@ton-community/test-utils';
 
+import { verify } from "@tact-lang/compiler";
+const pkg: string = '...';
+const res = await verify(pkg);
+
 type S = Sender & {
 	address: Address;
 }

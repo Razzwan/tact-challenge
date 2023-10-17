@@ -65,11 +65,11 @@ message(0x5fcc3d14) Transfer {
 }
 
 contract Task5 with Deployable {
-  const minTonsForStorage: Int = ton("0.1");
+  const MinTonsForStorage: Int = ton("0.1");
 
-  seed: Int as uint128;
-  owner: Address;
   nfts: map<Int as uint16, Address>;
+  owner: Address;
+  seed: Int as uint128;
   total: Int as uint16;
 
   init(seed: Int, owner: Address) {
@@ -81,10 +81,10 @@ contract Task5 with Deployable {
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
-    let newNft: Address = sender();
+    let newNft: Address = ctx.sender;
 
     if (msg.prevOwner == self.owner) {
-      let minRequiredTon: Int = self.minTonsForStorage + ctx.readForwardFee() + 8637989;
+      let minRequiredTon: Int = self.MinTonsForStorage + ctx.readForwardFee() + 8637989;
       require( myBalance() > minRequiredTon, "Insufficent funds");
 
       self.nfts.set(self.total, newNft);
@@ -133,7 +133,7 @@ contract Task5 with Deployable {
   }
 
   fun getFees(): Int {
-    return myBalance() - self.minTonsForStorage;
+    return myBalance() - self.MinTonsForStorage;
   }
 
   receive(msg: AdminWithdrawalFees) {
@@ -143,7 +143,7 @@ contract Task5 with Deployable {
 
     let amount: Int = self.getFees() - ctx.readForwardFee();
 
-    require(amount > self.minTonsForStorage, "Insufficent funds");
+    require(amount > self.MinTonsForStorage, "Insufficent funds");
 
     send(SendParameters{
       to: ctx.sender,
@@ -155,6 +155,9 @@ contract Task5 with Deployable {
   }
 
   receive(msg: AdminWithdrawalAllNFTs) {
+    let ctx: Context = context();
+
+    require(ctx.sender == self.owner, "Insufficient privelegies");
   }
 
   get fun fees(): Int {
