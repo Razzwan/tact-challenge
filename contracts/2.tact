@@ -26,28 +26,25 @@ contract Task2 with Deployable {
   }
 
   receive(msg: Bounced) {
-    let ctx: Context = context();
-
-    require(ctx.sender == self.admin, "Only Admin can bounce messages");
+    require(sender() == self.admin, "Only Admin can bounce messages");
 
     send(SendParameters{
       to: msg.sender,
       value: 0,
-      mode: SendRemainingValue + SendIgnoreErrors, // может быть неверно
+      mode: SendRemainingValue + SendIgnoreErrors,
       bounce: true,
-      body: beginCell().endCell() // может быть неверно
+      body: emptyCell()
     });
   }
 
   receive(msg: Slice) {
-    let ctx: Context = context();
     send(SendParameters{
       to: self.admin,
       value: 0,
-      mode: SendRemainingValue, // может быть неверно
+      mode: SendRemainingValue,
       bounce: true,
       body: beginCell()
-        .storeAddress(ctx.sender) // может быть неверно
+        .storeAddress(sender())
         .storeRef(
             beginCell().storeSlice(msg).endCell()
         ).endCell()
