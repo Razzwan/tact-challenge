@@ -90,7 +90,7 @@ describe('Task3', () => {
 
 		gasCompare(r1, 7959000n);
 		gasCompare(r2, 8073000n);
-		gasCompare(r3, 15809324n);
+		gasCompare(r3, 15791324n);
 	});
 
 	it('зачисление на счет A от внешнего контракта', async () => {
@@ -111,7 +111,7 @@ describe('Task3', () => {
 
 		gasCompare(r1, 7959000n);
 		gasCompare(r2, 8073000n);
-		gasCompare(t, 15530324n);
+		gasCompare(t, 15512324n);
 	});
 
 	it('зачисление при нехватке средств', async () => {
