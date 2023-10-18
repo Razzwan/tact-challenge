@@ -168,7 +168,7 @@ contract Task5 with Deployable {
       forwardAmount: 0,
       forwardPayload: emptySlice()
     }.toCell();
-    repeat(min(self.total, 100)) {
+    repeat(min(self.total, 128)) {
       send(SendParameters{
         to: self.nfts.get(self.total - 1)!!,
         value: ton("0.03"),
