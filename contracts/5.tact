@@ -82,10 +82,8 @@ contract Task5 with Deployable {
   receive(msg: OwnershipAssigned) {
     let ctx: Context = context();
 
-    let newNft: Address = ctx.sender;
-
     if (msg.prevOwner == self.owner) {
-      self.nfts.set(self.total, newNft);
+      self.nfts.set(self.total, ctx.sender);
       self.total = self.total + 1;
       return;
     }
@@ -94,7 +92,7 @@ contract Task5 with Deployable {
     if (excess < 0 || self.total == 0) {
       require(ctx.value > ton("0.1"), "Insufficent funds");
       send(SendParameters{
-        to: newNft,
+        to: ctx.sender,
         value: 0,
         mode: SendRemainingValue + SendIgnoreErrors,
         bounce: false,
@@ -111,10 +109,9 @@ contract Task5 with Deployable {
     }
 
     let idx: Int = random(0, self.total - 1);
-    let nft: Address? = self.nfts.get(idx);
 
     send(SendParameters{
-      to: nft!!,
+      to: self.nfts.get(idx)!!,
       value: ton("0.1"),
       mode: SendIgnoreErrors,
       bounce: false,
@@ -128,15 +125,15 @@ contract Task5 with Deployable {
       }.toCell()
     });
 
-    self.nfts.set(idx, newNft);
+    self.nfts.set(idx, ctx.sender);
   }
 
   receive(msg: AdminWithdrawalProfit) {
     let ctx: Context = context();
 
-    require(ctx.sender == self.owner, "Insufficient privelegies");
+    require(self.owner == ctx.sender, "Insufficient privelegies");
 
-    let amount: Int = myBalance() - self.MinTonsForStorage - max(ctx.value, ctx.readForwardFee());
+    let amount: Int = myBalance() - self.MinTonsForStorage - ctx.value;
 
     require(amount > 0, "Insufficent funds");
 
@@ -168,16 +165,17 @@ contract Task5 with Deployable {
       forwardAmount: 0,
       forwardPayload: emptySlice()
     }.toCell();
-    repeat(min(self.total, 128)) {
+
+    repeat(min(self.total, 100)) {
+      self.total = self.total - 1;
+
       send(SendParameters{
-        to: self.nfts.get(self.total - 1)!!,
-        value: ton("0.03"),
+        to: self.nfts.get(self.total)!!,
+        value: ton("0.05"),
         mode: SendIgnoreErrors,
         bounce: false,
         body: body
       });
-
-      self.total = self.total - 1;
     }
 
     if (self.total > 0) {
