@@ -100,10 +100,6 @@ contract Task4 with Deployable {
         forwardPayload: emptySlice()
       }.toCell()
     });
-
-    self.nft = null;
-    self.owner = null;
-    self.time = 0;
   }
 
   get fun time(): Int {
