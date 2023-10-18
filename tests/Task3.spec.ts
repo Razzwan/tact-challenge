@@ -2,6 +2,7 @@ import { Blockchain, SandboxContract, SendMessageResult } from '@ton-community/s
 import { Address, beginCell, toNano } from 'ton-core';
 import { Task3 } from '../wrappers/Task3';
 import '@ton-community/test-utils';
+import {gasUsage} from '../util/gas-usage';
 
 describe('Task3', () => {
 	let blockchain: Blockchain;
@@ -63,30 +64,38 @@ describe('Task3', () => {
 	});
 
 	it('зачисление на счет A', async () => {
-		await tokenTransfer('A', 10n, admin);
+		const r = await tokenTransfer('A', 10n, admin);
 
 		expect(await task3.getBalance(tokenA)).toBe(10n);
+
+		expect(gasUsage(r)).toEqual(7967000n);
 	});
 
 	it('зачисление на счет B', async () => {
-		await tokenTransfer('B', 2n, admin);
+		const r = await tokenTransfer('B', 2n, admin);
 
 		expect(await task3.getBalance(tokenB)).toBe(2n);
+
+		expect(gasUsage(r)).toEqual(8089000n);
 	});
 
 	it('зачисление на счет B от внешнего контракта', async () => {
-		await tokenTransfer('A', 10n, admin);
-		await tokenTransfer('B', 2n, admin);
+		const r1 = await tokenTransfer('A', 10n, admin);
+		const r2 = await tokenTransfer('B', 2n, admin);
 
-		await tokenTransfer('B', 1n, from);
+		const r3 = await tokenTransfer('B', 1n, from);
 
 		expect(await task3.getBalance(tokenB)).toBe(3n);
 		expect(await task3.getBalance(tokenA)).toBe(5n);
+
+		expect(gasUsage(r1)).toEqual(7967000n);
+		expect(gasUsage(r2)).toEqual(8089000n);
+		expect(gasUsage(r3)).toEqual(15928324n);
 	});
 
 	it('зачисление на счет A от внешнего контракта', async () => {
-		await tokenTransfer('A', 10n, admin);
-		await tokenTransfer('B', 2n, admin);
+		const r1 = await tokenTransfer('A', 10n, admin);
+		const r2 = await tokenTransfer('B', 2n, admin);
 
 		const t = await tokenTransfer('A', 10n, from);
 
@@ -99,6 +108,10 @@ describe('Task3', () => {
 			deploy: false,
 			success: true,
 		});
+
+		expect(gasUsage(r1)).toEqual(7967000n);
+		expect(gasUsage(r2)).toEqual(8089000n);
+		expect(gasUsage(t)).toEqual(15641324n);
 	});
 
 	it('зачисление при нехватке средств', async () => {

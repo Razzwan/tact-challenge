@@ -1,7 +1,8 @@
-import { Blockchain, SandboxContract } from '@ton-community/sandbox';
+import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/sandbox';
 import { toNano } from 'ton-core';
 import { Task1 } from '../wrappers/Task1';
 import '@ton-community/test-utils';
+import {gasUsage} from '../util/gas-usage';
 
 describe('Task1', () => {
 	let blockchain: Blockchain;
@@ -29,9 +30,9 @@ describe('Task1', () => {
 		});
 	});
 
-	const act = async (action: 'Add' | 'Subtract', number: bigint) => {
+	const act = async (action: 'Add' | 'Subtract', number: bigint): Promise<SendMessageResult> => {
 		const deployer = await blockchain.treasury('deployer');
-		await task1.send(
+		return await task1.send(
 			deployer.getSender(),
 			{
 				value: toNano('0.05'),
@@ -45,15 +46,21 @@ describe('Task1', () => {
 	};
 
 	it('Add', async () => {
-		await act('Add', 10n);
+		const r = await act('Add', 10n);
 
 		expect(await task1.getCounter()).toBe(10n);
+		expect(r.transactions.length).toEqual(2);
+		expect(gasUsage(r)).toEqual(7195328n);
 	});
 
 	it('Subtract', async () => {
-		await act('Add', 10n);
-		await act('Subtract', 1n);
+		const r1 = await act('Add', 10n);
+		const r2 = await act('Subtract', 1n);
 
 		expect(await task1.getCounter()).toBe(9n);
+
+		expect(gasUsage(r1)).toEqual(7195328n);
+
+		expect(gasUsage(r2)).toEqual(7298328n);
 	});
 });

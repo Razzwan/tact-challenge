@@ -80,7 +80,6 @@ contract Task3 with Deployable {
   }
 
   fun sendJettons(to: Address, amount: Int, msg: TokenNotification) {
-    let ctx: Context = context();
     send(SendParameters{
       to: to,
       value: 0,
@@ -99,39 +98,37 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    let ctx: Context = context();
-
-    if (ctx.sender == self.jAddressA) {
+    if (sender() == self.jAddressA) {
       if (msg.from == self.owner) {
         self.a = self.a + msg.amount;
-      } else {
-        let bAmount: Int = self.getPrice(self.jAddressA) * msg.amount / self.decimal;
-
-        if (bAmount <= self.b && bAmount > 0) {
-          self.a = self.a + msg.amount;
-          self.b = self.b - bAmount;
-          self.sendJettons(self.jAddressB, bAmount, msg);
-        } else {
-          self.sendJettons(self.jAddressA, msg.amount, msg);
-        }
+        return;
       }
+      let bAmount: Int = self.getPrice(self.jAddressA) * msg.amount / self.decimal;
+
+      if (bAmount <= self.b && bAmount > 0) {
+        self.a = self.a + msg.amount;
+        self.b = self.b - bAmount;
+        self.sendJettons(self.jAddressB, bAmount, msg);
+        return;
+      }
+      self.sendJettons(self.jAddressA, msg.amount, msg);
       return;
     }
 
-    if (ctx.sender == self.jAddressB) {
+    if (sender() == self.jAddressB) {
       if (msg.from == self.owner) {
         self.b = self.b + msg.amount;
-      } else {
-        let aAmount: Int = self.getPrice(self.jAddressB) * msg.amount / self.decimal;
-
-        if (aAmount <= self.a && aAmount > 0) {
-          self.b = self.b + msg.amount;
-          self.a = self.a - aAmount;
-          self.sendJettons(self.jAddressA, aAmount, msg);
-        } else {
-          self.sendJettons(self.jAddressB, msg.amount, msg);
-        }
+        return;
       }
+      let aAmount: Int = self.getPrice(self.jAddressB) * msg.amount / self.decimal;
+
+      if (aAmount <= self.a && aAmount > 0) {
+        self.b = self.b + msg.amount;
+        self.a = self.a - aAmount;
+        self.sendJettons(self.jAddressA, aAmount, msg);
+        return;
+      }
+      self.sendJettons(self.jAddressB, msg.amount, msg);
       return;
     }
 
