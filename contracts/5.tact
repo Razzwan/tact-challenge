@@ -135,7 +135,7 @@ contract Task5 with Deployable {
 
     let amount: Int = myBalance() - self.MinTonsForStorage - ctx.value;
 
-    require(amount > 0, "Insufficent funds");
+    require(amount > 0, "Insufficient funds");
 
     send(SendParameters{
       to: ctx.sender,
@@ -155,7 +155,7 @@ contract Task5 with Deployable {
 
     let fees: Int = ton("1") + self.total * ton("0.08");
 
-    require(ctx.value >= fees, "Insufficent funds");
+    require(ctx.value >= fees, "Insufficient funds");
 
     let body: Cell = Transfer{
       queryId: msg.queryId,
