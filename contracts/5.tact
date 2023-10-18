@@ -168,7 +168,7 @@ contract Task5 with Deployable {
 
       send(SendParameters{
         to: self.nfts.get(self.total)!!,
-        value: ton("0.03"),
+        value: ton("0.08"),
         mode: SendIgnoreErrors,
         body: body
       });
