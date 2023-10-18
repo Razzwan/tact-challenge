@@ -68,11 +68,11 @@ contract Task3 with Deployable {
   }
 
   fun getPrice(t: Address): Int {
-    if (t == self.jAddressA && self.a != 0) {
+    if (t == self.jAddressA && self.a > 0) {
       return self.b * self.decimal / self.a;
     }
 
-    if (t == self.jAddressB && self.b != 0) {
+    if (t == self.jAddressB && self.b > 0) {
       return self.a * self.decimal / self.b;
     }
 
