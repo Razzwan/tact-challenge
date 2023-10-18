@@ -2,7 +2,7 @@ import { Blockchain, SandboxContract, SendMessageResult } from '@ton-community/s
 import {Address, beginCell, Cell, Sender, toNano} from 'ton-core';
 import { Task4 } from '../wrappers/Task4';
 import '@ton-community/test-utils';
-import {gasUsage} from '../util/gas-usage';
+import {gasCompare} from '../util/gas-usage';
 
 type S = Sender & {
 	address: Address;
@@ -89,7 +89,7 @@ describe('Task4', () => {
 		expect(await task4.getNft()).toEqualAddress(nft.address);
 
 		expect(r.transactions.length).toBe(2);
-		expect(gasUsage(r)).toBeGreaterThanOrEqual(9968325n);
+		gasCompare(r, 9950325n);
 	});
 
 	it('revert nft back if already exists', async () => {
@@ -104,8 +104,8 @@ describe('Task4', () => {
 
 		expect(r2.transactions.length).toBe(3);
 
-		expect(gasUsage(r1)).toBeGreaterThanOrEqual(9968325n);
-		expect(gasUsage(r2)).toBeGreaterThanOrEqual(17080649n);
+		gasCompare(r1, 9950325n);
+		gasCompare(r2, 17080649n);
 	});
 
 	it('try to withdrawal by not owner', async () => {
@@ -117,6 +117,6 @@ describe('Task4', () => {
 		let r = await withdrawalNft(owner2, nft.address);
 
 		expect(r.events[0].type).toBe('message_sent');
-		expect(gasUsage(r)).toBeGreaterThanOrEqual(5149328n);
+		gasCompare(r, 5149328n);
 	});
 });

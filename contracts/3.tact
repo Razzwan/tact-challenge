@@ -103,14 +103,15 @@ contract Task3 with Deployable {
         self.a = self.a + msg.amount;
         return;
       }
-      let bAmount: Int = self.getPrice(self.jAddressA) * msg.amount / self.decimal;
+      if (self.a >= msg.amount) {
+        let bAmount: Int = self.getPrice(self.jAddressA) * msg.amount / self.decimal;
 
-      if (bAmount <= self.b && bAmount > 0) {
         self.a = self.a + msg.amount;
         self.b = self.b - bAmount;
         self.sendJettons(self.jAddressB, bAmount, msg);
         return;
       }
+
       self.sendJettons(self.jAddressA, msg.amount, msg);
       return;
     }
@@ -120,14 +121,15 @@ contract Task3 with Deployable {
         self.b = self.b + msg.amount;
         return;
       }
-      let aAmount: Int = self.getPrice(self.jAddressB) * msg.amount / self.decimal;
+      if (self.b >= msg.amount) {
+        let aAmount: Int = self.getPrice(self.jAddressB) * msg.amount / self.decimal;
 
-      if (aAmount <= self.a && aAmount > 0) {
         self.b = self.b + msg.amount;
         self.a = self.a - aAmount;
         self.sendJettons(self.jAddressA, aAmount, msg);
         return;
       }
+
       self.sendJettons(self.jAddressB, msg.amount, msg);
       return;
     }

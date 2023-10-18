@@ -2,7 +2,7 @@ import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/san
 import {Address, beginCell, Sender, toNano} from 'ton-core';
 import { Task2 } from '../wrappers/Task2';
 import '@ton-community/test-utils';
-import {gasCompare, gasUsage} from '../util/gas-usage';
+import {gasCompare} from '../util/gas-usage';
 
 type S = Sender & {
 	address: Address;

@@ -6,8 +6,8 @@ export function gasUsage(messageResult: SendMessageResult): bigint {
 	}, 0n)
 }
 
-export function gasCompare(messageResult: SendMessageResult, toCompare: bigint): void {
+export function gasCompare(messageResult: SendMessageResult, toCompare: bigint, accuracy: bigint = 2n): void {
 	const gas = gasUsage(messageResult);
 	expect(gas).toBeGreaterThanOrEqual(toCompare);
-	expect(gas).toBeLessThanOrEqual(toCompare + 2n);
+	expect(gas).toBeLessThanOrEqual(toCompare + accuracy);
 }

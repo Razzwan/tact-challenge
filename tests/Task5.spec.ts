@@ -2,7 +2,7 @@ import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/san
 import {Address, beginCell, Sender, toNano} from 'ton-core';
 import {Task5} from '../wrappers/Task5';
 import '@ton-community/test-utils';
-import {gasCompare, gasUsage} from '../util/gas-usage';
+import {gasCompare} from '../util/gas-usage';
 
 // import { verify } from "@tact-lang/compiler";
 
@@ -20,11 +20,12 @@ describe('Task5', () => {
 	let nft3: S;
 	let nft4: S;
 	let nft5: S;
+	let nftArr: Array<S>;
 
 	beforeEach(async () => {
 		blockchain = await Blockchain.create();
 
-		const addresses = await blockchain.createWallets(7);
+		const addresses = await blockchain.createWallets(307);
 
 		owner = addresses[0].getSender();
 		notOwner = addresses[1].getSender();
@@ -33,6 +34,7 @@ describe('Task5', () => {
 		nft3 = addresses[4].getSender();
 		nft4 = addresses[5].getSender();
 		nft5 = addresses[6].getSender();
+		nftArr = addresses.slice(7).map(el => el.getSender());
 
 		task5 = blockchain.openContract(await Task5.fromInit(0n, owner.address));
 		// const deployer = await blockchain.treasury('deployer');
@@ -77,6 +79,19 @@ describe('Task5', () => {
 			},
 			{
 				$$type: 'AdminWithdrawalProfit',
+				queryId: 0n,
+			}
+		);
+	};
+
+	const withdrawalAllNFTs = async (by: S, value: number): Promise<SendMessageResult> => {
+		return await task5.send(
+			by,
+			{
+				value: toNano(value.toString()),
+			},
+			{
+				$$type: 'AdminWithdrawalAllNFTs',
 				queryId: 0n,
 			}
 		);
@@ -162,5 +177,25 @@ describe('Task5', () => {
 		gasCompare(r1, 18684650n);
 
 		gasCompare(r2, 13682988n);
+	});
+
+	it('withdraw all 300 nfts by owner', async () => {
+		for (let i = 0; i < nftArr.length; i++) {
+			await addNft(owner, nftArr[i], 0.2);
+		}
+
+		const r1 = await addNft(notOwner, nft4, 3);
+
+		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+
+		gasCompare(r1, 23059652n);
+
+		const r2 = await withdrawalAllNFTs(owner, 25);
+
+		expect(r2.transactions.length).toEqual(304);
+
+		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+
+		gasCompare(r2, 1314879141n, 20n);
 	});
 });

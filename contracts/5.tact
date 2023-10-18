@@ -160,27 +160,24 @@ contract Task5 with Deployable {
 
     require(ctx.value >= fees, "Insufficent funds");
 
-    let i: Int = 0;
-    while (self.total > 0 && i < 100) {
-      let nft: Address? = self.nfts.get(self.total - 1);
-
+    let body: Cell = Transfer{
+      queryId: msg.queryId,
+      newOwner: self.owner,
+      responseDestination: self.owner,
+      customPayload: null,
+      forwardAmount: 0,
+      forwardPayload: emptySlice()
+    }.toCell();
+    repeat(min(self.total, 100)) {
       send(SendParameters{
-        to: nft!!,
+        to: self.nfts.get(self.total - 1)!!,
         value: ton("0.03"),
         mode: SendIgnoreErrors,
         bounce: false,
-        body: Transfer{
-          queryId: msg.queryId,
-          newOwner: self.owner,
-          responseDestination: self.owner,
-          customPayload: null,
-          forwardAmount: 0,
-          forwardPayload: emptySlice()
-        }.toCell()
+        body: body
       });
 
       self.total = self.total - 1;
-      i = i + 1;
     }
 
     if (self.total > 0) {

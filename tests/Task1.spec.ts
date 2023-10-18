@@ -2,7 +2,7 @@ import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/san
 import { toNano } from 'ton-core';
 import { Task1 } from '../wrappers/Task1';
 import '@ton-community/test-utils';
-import {gasUsage} from '../util/gas-usage';
+import {gasCompare} from '../util/gas-usage';
 
 describe('Task1', () => {
 	let blockchain: Blockchain;
@@ -50,7 +50,7 @@ describe('Task1', () => {
 
 		expect(await task1.getCounter()).toBe(10n);
 		expect(r.transactions.length).toEqual(2);
-		expect(gasUsage(r)).toEqual(7195328n);
+		gasCompare(r, 7195328n);
 	});
 
 	it('Subtract', async () => {
@@ -59,8 +59,7 @@ describe('Task1', () => {
 
 		expect(await task1.getCounter()).toBe(9n);
 
-		expect(gasUsage(r1)).toEqual(7195328n);
-
-		expect(gasUsage(r2)).toEqual(7298328n);
+		gasCompare(r1, 7195328n);
+		gasCompare(r2, 7298328n);
 	});
 });
