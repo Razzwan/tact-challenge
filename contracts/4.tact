@@ -64,16 +64,17 @@ contract Task4 with Deployable {
       self.nft = sender();
       self.owner = msg.prevOwner;
       self.time = now() + msg.forwardPayload.loadUint(32);
-    } else {
-      self.reply(Transfer{
-        queryId: msg.queryId,
-        newOwner: msg.prevOwner,
-        responseDestination: msg.prevOwner,
-        customPayload: null,
-        forwardAmount: 0,
-        forwardPayload: emptySlice()
-      }.toCell());
+      return;
     }
+
+    self.reply(Transfer{
+      queryId: msg.queryId,
+      newOwner: msg.prevOwner,
+      responseDestination: msg.prevOwner,
+      customPayload: null,
+      forwardAmount: 0,
+      forwardPayload: emptySlice()
+    }.toCell());
   }
 
   receive(msg: NftWithdrawal) {
@@ -93,8 +94,8 @@ contract Task4 with Deployable {
       bounce: false,
       body: Transfer{
         queryId: msg.queryId,
-        newOwner: self.owner!!,
-        responseDestination: self.owner!!,
+        newOwner: sender(),
+        responseDestination: sender(),
         customPayload: null,
         forwardAmount: 0,
         forwardPayload: emptySlice()
