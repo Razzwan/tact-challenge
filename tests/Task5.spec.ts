@@ -179,7 +179,7 @@ describe('Task5', () => {
 		gasCompare(r2, 12821988n);
 	});
 
-	fit('withdraw all 300 nfts by owner', async () => {
+	it('withdraw all 300 nfts by owner', async () => {
 		for (let i = 0; i < nftArr.length; i++) {
 			await addNft(owner, nftArr[i], 0.2);
 		}
@@ -196,6 +196,6 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r2, 1303833154n, 20n);
+		gasCompare(r2, 1303800150n, 20n);
 	});
 });

@@ -90,7 +90,7 @@ contract Task5 with Deployable {
 
     let excess: Int = ctx.value - ton("2.1");
     if (excess < 0 || self.total == 0) {
-      require(ctx.value > ton("0.1"), "Insufficent funds");
+      require(ctx.value > ton("0.1"), "I");
       send(SendParameters{
         to: ctx.sender,
         value: 0,
@@ -131,11 +131,11 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalProfit) {
     let ctx: Context = context();
 
-    require(self.owner == ctx.sender, "Insufficient privelegies");
+    require(self.owner == ctx.sender, "I");
 
     let amount: Int = myBalance() - self.MinTonsForStorage - ctx.value;
 
-    require(amount > 0, "Insufficient funds");
+    require(amount > 0, "I");
 
     send(SendParameters{
       to: ctx.sender,
@@ -151,11 +151,11 @@ contract Task5 with Deployable {
   receive(msg: AdminWithdrawalAllNFTs) {
     let ctx: Context = context();
 
-    require(ctx.sender == self.owner || ctx.sender == myAddress(), "Invalid sender");
+    require(ctx.sender == self.owner || ctx.sender == myAddress(), "I");
 
     let fees: Int = ton("1") + self.total * ton("0.08");
 
-    require(ctx.value >= fees, "Insufficient funds");
+    require(ctx.value >= fees, "I");
 
     let body: Cell = Transfer{
       queryId: msg.queryId,
