@@ -53,9 +53,7 @@ contract Task4 with Deployable {
   owner: Address?;
 
   init(seed: Int) {
-    self.seed = seed; // needed to deploy multiple smart contracts copies from one admin address
-    self.nft = null;
-    self.owner = null;
+    self.seed = seed;
     self.time = 0;
   }
 
@@ -100,6 +98,10 @@ contract Task4 with Deployable {
         forwardPayload: emptySlice()
       }.toCell()
     });
+
+    self.nft = null;
+    self.owner = null;
+    self.time = 0;
   }
 
   get fun time(): Int {
