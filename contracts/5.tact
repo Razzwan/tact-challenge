@@ -66,6 +66,7 @@ message(0x5fcc3d14) Transfer {
 
 contract Task5 with Deployable {
   const MinTonsForStorage: Int = ton("0.1");
+  const ExchangeFee: Int = ton("2.1");
 
   nfts: map<Int as uint16, Address>;
   owner: Address;
@@ -73,7 +74,6 @@ contract Task5 with Deployable {
   total: Int as uint16;
 
   init(seed: Int, owner: Address) {
-    self.nfts = emptyMap();
     self.owner = owner;
     self.seed = seed;
     self.total = 0;
@@ -88,9 +88,9 @@ contract Task5 with Deployable {
       return;
     }
 
-    let excess: Int = ctx.value - ton("2.1");
+    let excess: Int = ctx.value - self.ExchangeFee;
     if (excess < 0 || self.total == 0) {
-      require(ctx.value > ton("0.1"), "Insufficient funds");
+      require(ctx.value > self.MinTonsForStorage, "Insufficient funds");
       send(SendParameters{
         to: ctx.sender,
         value: 0,
@@ -111,7 +111,7 @@ contract Task5 with Deployable {
 
     send(SendParameters{
       to: self.nfts.get(idx)!!,
-      value: ton("0.1"),
+      value: self.MinTonsForStorage,
       mode: SendIgnoreErrors,
       body: Transfer{
         queryId: msg.queryId,
@@ -168,7 +168,7 @@ contract Task5 with Deployable {
 
       send(SendParameters{
         to: self.nfts.get(self.total)!!,
-        value: ton("0.08"),
+        value: ton("0.03"),
         mode: SendIgnoreErrors,
         body: body
       });
