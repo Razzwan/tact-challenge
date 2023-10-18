@@ -150,6 +150,11 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Invalid sender");
 
+    if (self.total == 0) {
+      self.nfts = emptyMap();
+      return;
+    }
+
     let fees: Int = ton("1") + self.total * ton("0.05");
 
     require(ctx.value >= fees, "Insufficient funds");
