@@ -2,6 +2,7 @@ import {Blockchain, SandboxContract, SendMessageResult} from '@ton-community/san
 import {Address, beginCell, Sender, toNano} from 'ton-core';
 import {Task5} from '../wrappers/Task5';
 import '@ton-community/test-utils';
+import {gasCompare, gasUsage} from '../util/gas-usage';
 
 // import { verify } from "@tact-lang/compiler";
 
@@ -82,33 +83,42 @@ describe('Task5', () => {
 	};
 
 	it('add 1 nft by owner', async () => {
-		await addNft(owner, nft1, 0.2);
+		const r = await addNft(owner, nft1, 0.2);
 
 		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
+
+		gasCompare(r, 9930659n);
 	});
 
 	it('add 2 nft by owner', async () => {
-		await addNft(owner, nft1, 0.2);
-		await addNft(owner, nft2, 0.2);
+		const r1 = await addNft(owner, nft1, 0.2);
+		const r2 = await addNft(owner, nft2, 0.2);
 
 		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
+
+		gasCompare(r1, 9930659n);
+		gasCompare(r2, 11030659n);
 	});
 
 	it('add 3 nft by owner', async () => {
-		await addNft(owner, nft1, 0.2);
-		await addNft(owner, nft2, 0.2);
-		await addNft(owner, nft3, 0.2);
+		const r1 = await addNft(owner, nft1, 0.2);
+		const r2 = await addNft(owner, nft2, 0.2);
+		const r3 = await addNft(owner, nft3, 0.2);
 
 		expect(await task5.getProfit()).toBeGreaterThanOrEqual(0n);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
 		expect((await task5.getNfts()).get(2)).toEqualAddress(nft3.address);
+
+		gasCompare(r1, 9930659n);
+		gasCompare(r2, 11030659n);
+		gasCompare(r3, 11030659n);
 	});
 
 	it('replace nft by other person not enough amount', async () => {
@@ -116,12 +126,14 @@ describe('Task5', () => {
 		await addNft(owner, nft2, 0.2);
 		await addNft(owner, nft3, 0.2);
 
-		await addNft(notOwner, nft4, 2.0);
+		const r = await addNft(notOwner, nft4, 2.0);
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
 		expect((await task5.getNfts()).get(2)).toEqualAddress(nft3.address);
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+
+		gasCompare(r, 15935983n);
 	});
 
 	it('replace nft by other person enough amount', async () => {
@@ -129,9 +141,11 @@ describe('Task5', () => {
 		await addNft(owner, nft2, 0.2);
 		await addNft(owner, nft3, 0.2);
 
-		await addNft(notOwner, nft4, 2.1);
+		const r = await addNft(notOwner, nft4, 2.1);
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+
+		gasCompare(r, 18673983n);
 	});
 
 	it('balance after withdrawal', async () => {
@@ -139,10 +153,14 @@ describe('Task5', () => {
 		await addNft(owner, nft2, 0.2);
 		await addNft(owner, nft3, 0.2);
 
-		await addNft(notOwner, nft4, 2.0);
+		const r1 = await addNft(notOwner, nft4, 3);
 
-		await withdrawal(owner);
+		const r2 = await withdrawal(owner);
 
 		expect(await task5.getProfit()).toEqual(0n);
+
+		gasCompare(r1, 18684650n);
+
+		gasCompare(r2, 13682988n);
 	});
 });
