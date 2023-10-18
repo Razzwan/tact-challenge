@@ -2,7 +2,7 @@ import { Blockchain, SandboxContract, SendMessageResult } from '@ton-community/s
 import { Address, beginCell, toNano } from 'ton-core';
 import { Task3 } from '../wrappers/Task3';
 import '@ton-community/test-utils';
-import {gasUsage} from '../util/gas-usage';
+import {gasCompare} from '../util/gas-usage';
 
 describe('Task3', () => {
 	let blockchain: Blockchain;
@@ -68,7 +68,7 @@ describe('Task3', () => {
 
 		expect(await task3.getBalance(tokenA)).toBe(10n);
 
-		expect(gasUsage(r)).toEqual(7967000n);
+		gasCompare(r, 7959000n);
 	});
 
 	it('зачисление на счет B', async () => {
@@ -76,7 +76,7 @@ describe('Task3', () => {
 
 		expect(await task3.getBalance(tokenB)).toBe(2n);
 
-		expect(gasUsage(r)).toEqual(8089000n);
+		gasCompare(r, 8073000n);
 	});
 
 	it('зачисление на счет B от внешнего контракта', async () => {
@@ -88,9 +88,9 @@ describe('Task3', () => {
 		expect(await task3.getBalance(tokenB)).toBe(3n);
 		expect(await task3.getBalance(tokenA)).toBe(5n);
 
-		expect(gasUsage(r1)).toEqual(7967000n);
-		expect(gasUsage(r2)).toEqual(8089000n);
-		expect(gasUsage(r3)).toEqual(15928324n);
+		gasCompare(r1, 7959000n);
+		gasCompare(r2, 8073000n);
+		gasCompare(r3, 15912324n);
 	});
 
 	it('зачисление на счет A от внешнего контракта', async () => {
@@ -109,9 +109,9 @@ describe('Task3', () => {
 			success: true,
 		});
 
-		expect(gasUsage(r1)).toEqual(7967000n);
-		expect(gasUsage(r2)).toEqual(8089000n);
-		expect(gasUsage(t)).toEqual(15641324n);
+		gasCompare(r1, 7959000n);
+		gasCompare(r2, 8073000n);
+		gasCompare(t, 15633324n);
 	});
 
 	it('зачисление при нехватке средств', async () => {

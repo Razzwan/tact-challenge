@@ -98,7 +98,7 @@ contract Task3 with Deployable {
   }
 
   receive(msg: TokenNotification) {
-    if (sender() == self.jAddressA) {
+    if (self.jAddressA == sender()) {
       if (msg.from == self.owner) {
         self.a = self.a + msg.amount;
         return;
@@ -115,7 +115,7 @@ contract Task3 with Deployable {
       return;
     }
 
-    if (sender() == self.jAddressB) {
+    if (self.jAddressB == sender()) {
       if (msg.from == self.owner) {
         self.b = self.b + msg.amount;
         return;

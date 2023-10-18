@@ -26,7 +26,7 @@ contract Task2 with Deployable {
   }
 
   receive(msg: Bounced) {
-    require(sender() == self.admin, "Only Admin can bounce messages");
+    require(self.admin == sender(), "Invalid sender");
 
     send(SendParameters{
       to: msg.sender,
