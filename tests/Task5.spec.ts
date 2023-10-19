@@ -104,7 +104,7 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 
-		gasCompare(r, 9930659n);
+		gasCompare(r, 9874660n);
 	});
 
 	it('add 2 nft by owner', async () => {
@@ -116,8 +116,8 @@ describe('Task5', () => {
 		expect((await task5.getNfts()).get(0)).toEqualAddress(nft1.address);
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
 
-		gasCompare(r1, 9930659n);
-		gasCompare(r2, 11030659n);
+		gasCompare(r1, 9874660n);
+		gasCompare(r2, 10974660n);
 	});
 
 	it('add 3 nft by owner', async () => {
@@ -131,9 +131,9 @@ describe('Task5', () => {
 		expect((await task5.getNfts()).get(1)).toEqualAddress(nft2.address);
 		expect((await task5.getNfts()).get(2)).toEqualAddress(nft3.address);
 
-		gasCompare(r1, 9930659n);
-		gasCompare(r2, 11030659n);
-		gasCompare(r3, 11030659n);
+		gasCompare(r1, 9874660n);
+		gasCompare(r2, 10974660n);
+		gasCompare(r3, 10974660n);
 	});
 
 	it('replace nft by other person not enough amount', async () => {

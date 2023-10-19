@@ -80,15 +80,15 @@ contract Task5 with Deployable {
   }
 
   receive(msg: OwnershipAssigned) {
-    let ctx: Context = context();
-
     if (msg.prevOwner == self.owner) {
-      self.nfts.set(self.total, ctx.sender);
+      self.nfts.set(self.total, sender());
       self.total = self.total + 1;
       return;
     }
 
+    let ctx: Context = context();
     let excess: Int = ctx.value - self.ExchangeFee;
+
     if (excess < 0 || self.total == 0) {
       require(ctx.value > self.MinTonsForStorage, "Insufficient funds");
       send(SendParameters{
@@ -167,7 +167,7 @@ contract Task5 with Deployable {
       forwardPayload: emptySlice()
     }.toCell();
 
-    repeat(min(self.total, 100)) {
+    repeat(min(100, self.total)) {
       self.total = self.total - 1;
 
       send(SendParameters{
