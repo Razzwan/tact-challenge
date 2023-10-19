@@ -148,7 +148,7 @@ describe('Task5', () => {
 		expect((await task5.getNfts()).get(2)).toEqualAddress(nft3.address);
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r, 15917984n);
+		gasCompare(r, 15840984n);
 	});
 
 	it('replace nft by other person enough amount', async () => {
@@ -160,7 +160,7 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r, 18621984n);
+		gasCompare(r, 18518984n);
 	});
 
 	it('balance after withdrawal', async () => {
@@ -174,7 +174,7 @@ describe('Task5', () => {
 
 		expect(await task5.getProfit()).toEqual(0n);
 
-		gasCompare(r1, 18632651n);
+		gasCompare(r1, 18529651n);
 
 		gasCompare(r2, 12777988n);
 	});
@@ -188,7 +188,7 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r1, 23007652n, 7n);
+		gasCompare(r1, 22904652n, 7n);
 
 		const r2 = await withdrawalAllNFTs(owner, 25);
 
@@ -196,6 +196,6 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r2, 1298625149n, 20n);
+		gasCompare(r2, 1298345153n, 20n);
 	});
 });

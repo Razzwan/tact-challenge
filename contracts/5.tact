@@ -149,11 +149,6 @@ contract Task5 with Deployable {
 
     require(ctx.sender == self.owner || ctx.sender == myAddress(), "Invalid sender");
 
-    if (self.total == 0) {
-      self.nfts = emptyMap();
-      return;
-    }
-
     let fees: Int = ton("1") + self.total * ton("0.05");
 
     require(ctx.value >= fees, "Insufficient funds");
@@ -178,19 +173,19 @@ contract Task5 with Deployable {
       });
     }
 
-    if (self.total > 0) {
-      send(SendParameters{
-        to: myAddress(),
-        value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
-        body: AdminWithdrawalAllNFTs{
-          queryId: msg.queryId
-        }.toCell()
-      });
+    if (self.total == 0) {
+      self.nfts = emptyMap();
       return;
     }
 
-    self.nfts = emptyMap();
+    send(SendParameters{
+      to: myAddress(),
+      value: 0,
+      mode: SendRemainingValue + SendIgnoreErrors,
+      body: AdminWithdrawalAllNFTs{
+        queryId: msg.queryId
+      }.toCell()
+    });
   }
 
   get fun profit(): Int {
