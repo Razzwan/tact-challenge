@@ -31,8 +31,7 @@ contract Task2 with Deployable {
     send(SendParameters{
       to: msg.sender,
       value: 0,
-      mode: SendRemainingValue + SendIgnoreErrors,
-      body: emptyCell()
+      mode: SendRemainingValue
     });
   }
 

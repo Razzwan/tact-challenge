@@ -1,3 +1,5 @@
+import "@stdlib/deploy";
+
 /*
   TASK 1 - Counter contract
   Implement counter contract that will have 2 opcodes ('Add' / 'Subtract'),
@@ -15,7 +17,7 @@ message Subtract {
   number: Int as uint32;
 }
 
-contract Task1 {
+contract Task1 with Deployable {
   counter: Int as int32;
 
   init() {

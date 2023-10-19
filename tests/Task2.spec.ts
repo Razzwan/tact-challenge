@@ -72,19 +72,19 @@ describe('Task2', () => {
 	it('gas usage 1', async () => {
 		const r = await act(0, 1);
 
-		gasCompare(r, 12738653n);
+		gasCompare(r, 12720653n);
 	});
 
 	it('gas usage 2', async () => {
 		const r = await act(12, 32);
 
-		gasCompare(r, 12854987n);
+		gasCompare(r, 12836987n);
 	});
 
 	it('bounce correct', async () => {
 		const r = await bounce(admin, oneMore.address);
 
-		gasCompare(r, 12686320n);
+		gasCompare(r, 12010987n);
 	});
 
 	it('bounce not by admin', async () => {
