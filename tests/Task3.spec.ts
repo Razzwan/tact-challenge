@@ -68,7 +68,7 @@ describe('Task3', () => {
 
 		expect(await task3.getBalance(tokenA)).toBe(10n);
 
-		gasCompare(r, 7959000n);
+		gasCompare(r, 7891000n);
 	});
 
 	it('зачисление на счет B', async () => {
@@ -76,7 +76,7 @@ describe('Task3', () => {
 
 		expect(await task3.getBalance(tokenB)).toBe(2n);
 
-		gasCompare(r, 8073000n);
+		gasCompare(r, 8005000n);
 	});
 
 	it('зачисление на счет B от внешнего контракта', async () => {
@@ -88,9 +88,9 @@ describe('Task3', () => {
 		expect(await task3.getBalance(tokenB)).toBe(3n);
 		expect(await task3.getBalance(tokenA)).toBe(5n);
 
-		gasCompare(r1, 7959000n);
-		gasCompare(r2, 8073000n);
-		gasCompare(r3, 15791324n);
+		gasCompare(r1, 7891000n);
+		gasCompare(r2, 8005000n);
+		gasCompare(r3, 15723324n);
 	});
 
 	it('зачисление на счет A от внешнего контракта', async () => {
@@ -109,9 +109,9 @@ describe('Task3', () => {
 			success: true,
 		});
 
-		gasCompare(r1, 7959000n);
-		gasCompare(r2, 8073000n);
-		gasCompare(t, 15512324n);
+		gasCompare(r1, 7891000n);
+		gasCompare(r2, 8005000n);
+		gasCompare(t, 15444324n);
 	});
 
 	it('зачисление при нехватке средств', async () => {
