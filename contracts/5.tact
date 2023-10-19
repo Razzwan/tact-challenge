@@ -89,7 +89,7 @@ contract Task5 with Deployable {
     let ctx: Context = context();
     let excess: Int = ctx.value - self.ExchangeFee;
 
-    if (excess < 0 || self.total == 0) {
+    if (excess < 0) {
       require(ctx.value > self.MinTonsForStorage, "Insufficient funds");
       send(SendParameters{
         to: ctx.sender,
