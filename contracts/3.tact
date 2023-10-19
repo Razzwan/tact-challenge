@@ -52,8 +52,8 @@ message(0xf8a7ea5) TokenTransfer {
 
 contract Task3 with Deployable {
   owner: Address;
-  a: Int;
-  b: Int;
+  a: Int as uint64;
+  b: Int as uint64;
   jAddressA: Address;
   jAddressB: Address;
   decimal: Int as uint32;
