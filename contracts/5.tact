@@ -94,7 +94,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: ctx.sender,
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: SendRemainingValue,
         body: Transfer{
           queryId: msg.queryId,
           newOwner: msg.prevOwner,
@@ -112,7 +112,6 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: self.nfts.get(idx)!!,
       value: self.MinTonsForStorage,
-      mode: SendIgnoreErrors,
       body: Transfer{
         queryId: msg.queryId,
         newOwner: msg.prevOwner,
@@ -138,7 +137,7 @@ contract Task5 with Deployable {
     send(SendParameters{
       to: ctx.sender,
       value: amount,
-      mode: SendRemainingValue + SendIgnoreErrors,
+      mode: SendRemainingValue,
       body: AdminFetchProfit {
         queryId: msg.queryId
       }.toCell()
@@ -174,7 +173,6 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: self.nfts.get(self.total)!!,
         value: ton("0.03"),
-        mode: SendIgnoreErrors,
         body: body
       });
     }
@@ -183,7 +181,7 @@ contract Task5 with Deployable {
       send(SendParameters{
         to: myAddress(),
         value: 0,
-        mode: SendRemainingValue + SendIgnoreErrors,
+        mode: SendRemainingValue,
         body: AdminWithdrawalAllNFTs{
           queryId: msg.queryId
         }.toCell()
