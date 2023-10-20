@@ -68,15 +68,11 @@ contract Task3 with Deployable {
   }
 
   fun getPrice(t: Address): Int {
-    if (t == self.jAddressA && self.a > 0) {
+    if (t == self.jAddressA) {
       return self.b * self.decimal / self.a;
     }
 
-    if (self.b > 0) {
-      return self.a * self.decimal / self.b;
-    }
-
-    return 0;
+    return self.a * self.decimal / self.b;
   }
 
   fun sendJettons(to: Address, amount: Int, msg: TokenNotification) {
