@@ -59,8 +59,8 @@ contract Task4 with Deployable {
 
   receive(msg: OwnershipAssigned) {
     if (self.nft == null) {
-      self.nft = sender();
       self.owner = msg.prevOwner;
+      self.nft = sender();
       self.time = msg.forwardPayload.loadUint(32) + now();
       return;
     }
@@ -98,9 +98,9 @@ contract Task4 with Deployable {
       }.toCell()
     });
 
+    self.time = 0;
     self.nft = null;
     self.owner = null;
-    self.time = 0;
   }
 
   get fun time(): Int {

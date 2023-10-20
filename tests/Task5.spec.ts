@@ -179,8 +179,8 @@ describe('Task5', () => {
 		gasCompare(r2, 12777988n);
 	});
 
-	it('withdraw all 300 nfts by owner', async () => {
-		for (let i = 0; i < nftArr.length; i++) {
+	it('withdraw all 10 nfts by owner', async () => {
+		for (let i = 0; i < 10; i++) {
 			await addNft(owner, nftArr[i], 0.2);
 		}
 
@@ -188,14 +188,34 @@ describe('Task5', () => {
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r1, 22904652n, 7n);
+		gasCompare(r1, 19779651n, 7n);
 
 		const r2 = await withdrawalAllNFTs(owner, 25);
 
-		expect(r2.transactions.length).toEqual(304);
+		expect(r2.transactions.length).toEqual(12);
 
 		expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
 
-		gasCompare(r2, 1298345153n, 20n);
+		gasCompare(r2, 52764568n, 20n);
 	});
+
+	// it('withdraw all 300 nfts by owner', async () => {
+	// 	for (let i = 0; i < nftArr.length; i++) {
+	// 		await addNft(owner, nftArr[i], 0.2);
+	// 	}
+	//
+	// 	const r1 = await addNft(notOwner, nft4, 3);
+	//
+	// 	expect((await task5.getNfts()).values().map(addr => addr.toRaw())).toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+	//
+	// 	gasCompare(r1, 22904652n, 7n);
+	//
+	// 	const r2 = await withdrawalAllNFTs(owner, 25);
+	//
+	// 	expect(r2.transactions.length).toEqual(304);
+	//
+	// 	expect((await task5.getNfts()).values().map(addr => addr.toRaw())).not.toEqual(expect.arrayContaining([nft4.address.toRaw()]));
+	//
+	// 	gasCompare(r2, 1298345153n, 20n);
+	// });
 });

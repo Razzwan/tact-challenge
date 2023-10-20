@@ -117,6 +117,6 @@ describe('Task4', () => {
 		let r = await withdrawalNft(owner2, nft.address);
 
 		expect(r.events[0].type).toBe('message_sent');
-		gasCompare(r, 5149328n);
+		gasCompare(r, 5039328n);
 	});
 });
